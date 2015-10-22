@@ -1,0 +1,35 @@
+BODY {
+	-webkit-text-size-adjust: none;
+	}
+A {
+	text-decoration: none;
+	}
+A:HOVER {
+	text-decoration: underline;
+	}
+
+A.exref {
+	font-family0: sans-serif;
+	font-style: italic;
+	}
+.cat_rows {
+	font-family: sans-serif;
+	}
+.version {
+	color: #7f7f7f;
+	font-family:
+	sans-serif;
+	font-size: smaller;
+	}
+p.art-fin {
+	margin-top: 0;
+	margin-right: 0;
+	margin-left: 0;
+	margin-bottom: 8em;
+	}
+div.art-fin {
+	margin-top: 0;
+	margin-right: 0;
+	margin-left: 0;
+	margin-bottom: 8em;
+	}

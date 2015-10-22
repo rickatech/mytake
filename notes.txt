@@ -1,0 +1,15 @@
+TO DO
+
+If there is no bog, then don't present a link.
+
+Build equivelnet tag lists for Read, Tunes, Flicks, WTF
+
+Make all tag words links to record matching page.  Or at least
+major tags are links
+
+On fully article view, insert the title and byline from data record,
+also list the tags on the top
+
+unveil https://mytake.zaptech.com/
+
+
