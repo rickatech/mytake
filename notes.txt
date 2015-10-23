@@ -11,5 +11,3 @@ On fully article view, insert the title and byline from data record,
 also list the tags on the top
 
 unveil https://mytake.zaptech.com/
-
-
