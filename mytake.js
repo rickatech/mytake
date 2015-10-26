@@ -14,6 +14,7 @@ function window_adjust() {
 		else
 			dwin.style.width = (desk_width - xm) + 'px';
 		}
+	if (debug_mask & 1)
 	document.getElementById('mt_msg').innerHTML = notes;
 	}
 
@@ -36,10 +37,5 @@ function head_logout() {
         }
 
 var FLAG_MOBILE = 1;
-var desk_width = <?PHP  echo DESK_WIDTH_MIN;  ?>;
-var desk_width_pad = <?PHP  echo DESK_WIDTH_PAD;  ?>;
 var xm = desk_width_pad << 1;
-var dflags = <?PHP  echo $dflags;  ?>;
 
-window.onresize = window_adjust;
-window.onload = window_adjust;
