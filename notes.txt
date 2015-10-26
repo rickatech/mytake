@@ -1,3 +1,11 @@
+SETUP
+
+index_sample.php provide rough template for how calls can be made to
+mytake functions.  It does require article catalog file with references
+to pre-loaded imags (beyond the scope of this version to provide
+secondary samples of those ... for now).
+
+
 TO DO
 
 If there is no bog, then don't present a link.
@@ -9,5 +17,3 @@ major tags are links
 
 On fully article view, insert the title and byline from data record,
 also list the tags on the top
-
-unveil https://mytake.zaptech.com/
