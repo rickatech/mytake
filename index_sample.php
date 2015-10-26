@@ -113,9 +113,10 @@ window.onload = window_adjust;
 		}
 	else {  /*  --- START MAIN SUMMARY DISPLAY ---  */  ?>
 
-<div style="float: left; width: 288px;"><?PHP
+<!--  FUTURE: pass div style to function, if nothing to show then skip placing an empty div  -->
+<!--  div style="float: left; width: 288px;"  --><?PHP
 		catalog_latest(6);  ?>
-	</div>
+	<!--  /div  -->
 
 <div style="float: left; width: 288px;"><B>Exchange</B>
 [<A HREF=http://blog.zaptech.com/?file=mytake/exchange&area=1>edit</A>]<?PHP
@@ -123,17 +124,25 @@ window.onload = window_adjust;
         readfile("/Users/fredness/zaptech/blog/content/mytake/exchange");  ?>
 	</div>
 
-<div style="float: left; width: 288px;"><?PHP
+<!--  div style="float: left; width: 288px;"  --><?PHP
 		catalog_latest(6, 'music');  ?>
-	</div>
+	<!--  /div  -->
 
-<div style="float: left; width: 288px;"><?PHP
+<!--  div style="float: left; width: 288px;"  --><?PHP
+		catalog_latest(6, 'ondeck');  ?>
+	<!--  /div  -->
+
+<!--  div style="float: left; width: 288px;"  --><?PHP
 		catalog_latest(6, 'book');  ?>
-	</div>
+	<!--  /div  -->
 
-<div style="float: left; width: 288px;"><?PHP
+<!--  div style="float: left; width: 288px;"  --><?PHP
 		catalog_latest(6, 'film');  ?>
-	</div>
+	<!--  /div  -->
+
+<!--  div style="float: left; width: 288px;"  --><?PHP
+		catalog_latest(6, NULL, NULL, session_userid_active() ? session_username_active() : 'N/A', 'My Content');  ?>
+	<!--  /div  -->
 
 <!--div style="float: left; width: 288px;"><B>Tunes</B>
 [<A HREF=http://blog.zaptech.com/?file=mytake/tunes&area=1>edit</A>]<?PHP

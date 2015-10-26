@@ -7,7 +7,6 @@ A {
 A:HOVER {
 	text-decoration: underline;
 	}
-
 A.exref {
 	font-family0: sans-serif;
 	font-style: italic;
@@ -32,4 +31,17 @@ div.art-fin {
 	margin-right: 0;
 	margin-left: 0;
 	margin-bottom: 8em;
+	}
+div.list_head {
+	height: 24px;
+	overflow: hidden;
+	}
+div.list_body {
+	float: left;
+	width: 288px;
+	}
+div.list_tail {
+	height: 48px;
+	overflow: hidden;
+	margin-left: 72px;
 	}

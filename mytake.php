@@ -6,34 +6,65 @@ function ap($a) {
 	echo "</pre>";
 	}
 
-function get_map($filename, $tag = NULL, $art = NULL) {
+function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
         //  read in 'nosql' data file, return array
-	//  tag     tag to match, NULL skip tag matching
-	//  art     article ID to match, NULL skip article ID matching
+	//  tag     tag to match, NULL match all tags
+	//          ignore elements matching 'ondeck' unless specifcally passed
+	//  art     article ID to match, NULL match all article ID's
+	//          if both art and tag are passed, tag will be ignored
+	//  usr     only show content authored by specific user
+	//  flg     FUTURE: omit ondeck, filter by content type
 	//  FUTURE: all multiple tags, article ID's to be passed in
 
         $row = 0;
         if ($fh = fopen($filename, 'r')) {
+		$ua = is_null(session_userid_active()) ? false : true;
                 while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
-			$m = false;
-			if (!is_null($tag)) {
-				$ta = explode('|', $data[3]);
-				foreach($ta as $t) {
-					if ($t == $tag) {
-						$m = true; break;  }
+		    if ($data[0] != 'ID') {  //  skip past column titles row
+			$mu = false;
+			if ($ua) {
+				$usrx = NULL;
+				if (!is_null($usr))
+					$usrx = $usr;
+				else if ($tag == 'ondeck' && is_null($usr))
+					$usrx = session_username_active();
+				if (!is_null($usrx)) {  //  see if content author matches logged in user
+					$da_cap = explode('|', $data[2]);
+					//  echo "\n<br>test: ".$usr.", ".$da_cap[1];
+					if (isset($da_cap[1]) && strstr($da_cap[1], $usrx))
+						$mu = true;
 					}
 				}
-			else if (!is_null($art)) {
+			$od = false;
+			$m = false;
+			$ta = explode('|', $data[3]);
+			foreach($ta as $t) {
+				if ($t == 'ondeck') {
+					$od = true;  }
+				if (!is_null($tag) && $t == $tag) {
+					$m = true;  }
+				}
+			if (!is_null($art)) {
 				if ($data[1] == $art)
 					$m = true;
 				}
-			else
+			else if (is_null($tag))
 				$m = true;
+			if (!is_null($usr)) {  //  see if content author matches logged in user
+				if ($m) $m = $mu;
+				}
+			//  only show ondeck items if ondeck tag passed in, and author matches logged in user
+			if ($m && $tag != 'ondeck') {
+				$m = $od ? false : true;
+				}
+			else if ($m)
+				$m = $mu;
 			if ($m) {
                                 $new_map[$row] = $data;
 				$row++;
 				}
                         }
+		    }
                 fclose($fh);
                 return ($new_map);
                 }
@@ -43,60 +74,64 @@ function get_map($filename, $tag = NULL, $art = NULL) {
                 }
         }
 
-function catalog_latest($nlist = 4, $tag = NULL, $art = NULL) {
+function catalog_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab = NULL) {
 	global $catalog_data;
 
-	$data = get_map($catalog_data, $tag, $art);
+	$data = get_map($catalog_data, $tag, $art, $usr);
+	//  $data = get_map($catalog_data, $tag, $art, session_username_active());
 	if (is_null($data))
 		return;
 	if (sizeof($data) < 1)
 		return;
+	echo "\n<div class=list_body>\n";
 	//  without overflow: hidden, spacing is weird
-	echo "<div style=\"height: 24px; overflow: hidden;\">";
-	if (is_null($tag)) {
+	echo "\n<div class=list_head>\n";
+	if (!is_null($lab))
+		echo "&nbsp;<B>".$lab."</B>\n";
+	else if (is_null($tag)) {
 		echo "&nbsp;<B>Latest</B>\n";
 		}
 	else {
 		echo "&nbsp;<B><a href=?tag=".$tag.">";  //  FUTURE: omit link if superfluous
-		if ($tag == 'music')     echo 'Tunes';
-		else if ($tag == 'book') echo 'Read';
-		else if ($tag == 'film') echo 'Filcks';
+		if ($tag == 'music')  echo 'Tunes';
+		else if ($tag == 'book')   echo 'Read';
+		else if ($tag == 'film')   echo 'Filcks';
+		else if ($tag == 'ondeck') echo 'On Deck';
 		else echo $tag;
 		echo "</a></B>\n";
 		}
 	echo "</div>";
 	foreach($data as $da) {
-		if ($da[0] != 'ID') {  //  skip past column titles row
-			$da_tag = explode('|', $da[3]);
-			$da_cap = explode('|', $da[2]);
-			if (isset($da[1])) {
-				/*  FUTURE: make this an ajax call  */
-				if (strlen($da[5]) > 0) {
-					$a0 = "<a class=exref\n  href=\"".$da[5]."\">";
-					$a1 = "</a>";  }
-				else {
-					$a0 = "<b><a\n   href=\"?art=".$da[1]."\">";
-					$a1 = "</a></b>";  }
-				}
+		$da_tag = explode('|', $da[3]);
+		$da_cap = explode('|', $da[2]);
+		if (isset($da[1])) {
+			/*  FUTURE: make this an ajax call  */
+			if (strlen($da[5]) > 0) {
+				$a0 = "<a class=exref\n  href=\"".$da[5]."\">";
+				$a1 = "</a>";  }
 			else {
-				$a0 ='';  $a1 = '';  }
-			//  without overflow: hidden, spacing is weird
-			echo "\n<div class=\"cat_rows\" style=\"clear: both; overflow: hidden;\">".$a0.
-			  "<img src=\"gfx/".$da[4]."\" align=left style=\"width: 68px; margin: 2px;\">".$a1;
-			echo "<p style=\"margin: 0;\">".(isset($da_cap[0]) ? $a0.$da_cap[0].$a1 : '');
-			echo "<span style=\"font-size: smaller;\">\n  <br>".(isset($da_cap[1]) ? $da_cap[1] : '')."</span></p>";
-			$f = false; $str = '';
-			foreach ($da_tag as $i) {
-				if (!$f) $f = true;
-				else $str .= ", ";
-				$str .= $i;
-				}
-			if ($f) echo "\n  <p style=\"font-size: smaller; margin-bottom: 0;\">".$str."</p>";
-			echo "</div>";
+				$a0 = "<b><a\n   href=\"?art=".$da[1]."\">";
+				$a1 = "</a></b>";  }
 			}
+		else {
+			$a0 ='';  $a1 = '';  }
+		//  without overflow: hidden, spacing is weird
+		echo "\n<div class=\"cat_rows\" style=\"clear: both; overflow: hidden;\">".$a0.
+		  "<img src=\"gfx/".$da[4]."\" align=left style=\"width: 68px; margin: 2px;\">".$a1;
+		echo "<p style=\"margin: 0;\">".(isset($da_cap[0]) ? $a0.$da_cap[0].$a1 : '');
+		echo "<span style=\"font-size: smaller;\">\n  <br>".(isset($da_cap[1]) ? $da_cap[1] : '')."</span></p>";
+		$f = false; $str = '';
+		foreach ($da_tag as $i) {
+			if (!$f) $f = true;
+			else $str .= ", ";
+			$str .= $i;
+			}
+		if ($f) echo "\n  <p style=\"font-size: smaller; margin-bottom: 0;\">".$str."</p>";
+		echo "</div>";
 		}
 	//  without overflow: hidden, spacing is weirdi, marry this + title above = 72px;
-	echo "<div style=\"height: 48px; overflow: hidden; margin-left: 72px;\">... </div>";
+	echo "\n<div class=list_tail>... </div>\n";
+	echo "\n</div>\n";
 	}
 
 function article($art = NULL) {

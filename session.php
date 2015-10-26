@@ -4,6 +4,8 @@
 //  FUTURE: return 0 if user not logged in so downstream code can disengage appropriately  
 session_start();
 
+//  FUTURE, make the following a class
+
 function session_detect() {
 	//  FUTURE, only allow if NOT isprod?
 	if (isset($_GET['debug'])) {
@@ -98,6 +100,22 @@ function login_check($u, $p) {
 		else
 			return ("no user profiles file");
 		} // ***
+	}
+
+function session_userid_active() {
+	//  Return User ID if user is actively logged in or NULL 
+	//    NULL  not active
+	//    UID   user login active
+	return isset($_SESSION['uid_dg']) ? $_SESSION['uid_dg'] : NULL;
+	}
+
+function session_username_active() {
+	//  Return username if user is actively logged in or NULL 
+	if (session_userid_active()) {
+		if (isset($_SESSION['username_dg']))
+			return $_SESSION['username_dg'];
+		}
+	return NULL;
 	}
 
 function login_state(&$out) {
