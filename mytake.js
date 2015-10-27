@@ -15,7 +15,7 @@ function window_adjust() {
 			dwin.style.width = (desk_width - xm) + 'px';
 		}
 	if (debug_mask & 1)
-	document.getElementById('mt_msg').innerHTML = notes;
+		document.getElementById('mt_msg').innerHTML = notes;
 	}
 
 function detectKeyLogin(event) {
@@ -35,7 +35,3 @@ function head_login() {
 function head_logout() {
 	window.open('?ajax=0&logout', '_self');
         }
-
-var FLAG_MOBILE = 1;
-var xm = desk_width_pad << 1;
-

@@ -1,6 +1,10 @@
 SETUP
 
-index_sample.php provide rough template for how calls can be made to
+Various layouts and moods can leverage mytake functions,
+however the initial files to load will need some customization.
+index.php and base.css must be created by copying samples
+provided in subfolders mt and hs, or with an new equivelent.
+Either provide template for how calls can be made to
 mytake functions.  It does require article catalog file with references
 to pre-loaded imags (beyond the scope of this version to provide
 secondary samples of those ... for now).

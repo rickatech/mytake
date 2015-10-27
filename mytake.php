@@ -152,7 +152,7 @@ function article($art = NULL) {
 
 function article_out($artrec) {
 	global $dflags;
-	global $edit_url;
+	global $edit_url, $edit_urla, $data_dir;
 
 	if (is_null($artrec))
 		return;
@@ -166,14 +166,14 @@ function article_out($artrec) {
 		}
 	if ($f) echo "\n".$str;
 	if (!$dflags & DFLAGS_MOBILE) {  // i.e. not mobile
-		echo " [&nbsp;<A href=".$edit_url.$artrec['article']."&area=1>edit</a>&nbsp;]";
+		echo " [&nbsp;<A href=".$edit_urla.$artrec['article']."&test=1234>edit</a>&nbsp;]";
 		}
 	echo "</div>";
 
 	echo "<p style=\"margin-top: 0;\">".(isset($artrec['caption'][0]) ? '<b>'.$artrec['caption'][0].'</b>' : '');
 	echo "<span style=\"color: grey;\"><br>".(isset($artrec['caption'][1]) ? $artrec['caption'][1] : '')."</span></p>";
 	/*  using readfile() purposely insures PHP commands in file are ignored  */
-	readfile("/Users/fredness/zaptech/blog/content/mytake/".$artrec['article']);
+	readfile($data_dir.'/'.$artrec['article']);
 	}
 
 function tunes($mode) {

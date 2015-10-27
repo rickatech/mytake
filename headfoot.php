@@ -30,6 +30,20 @@ function head_body() {
         	}
 	}
 
+function body_lowright () {
+	global $version;
+	/*  this shows logged in user's thumbnail image and link to their profile
+	/*  FUTURE: customize this to be a seperate 'plug-in' PHP file
+	/*         to allow this placement/layout to be customized   */
+	if (0) {
+	echo "<div style=\"position: absolute; right: 0px; bottom: -1px;\"><a";
+	echo "\n  href=/rickatech/><img SRC=https://images.zaptech.com/rickatech/dukeanomx.gif";
+	echo "\n  BORDER=0 ALT=\"rickatech\"></a></div>";
+		}
+	echo "\n<div class=version style=\"position: absolute; right: 0px; bottom: 0;\">";
+	echo $version."&nbsp;</div>";
+	}	
+
 function foot() {
 	echo "<div style=\"text-align: center; font-family: sans-serif;\"><br>about | join | promotions | careers</div>"; 
 	}

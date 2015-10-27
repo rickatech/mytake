@@ -1,6 +1,7 @@
 BODY {
 	-webkit-text-size-adjust: none;
-	background: #5fbf00;
+	background-image: url("gfx/interhex2.png");
+	background0: #5fbf00;
 	}
 A {
 	text-decoration: none;
@@ -11,6 +12,15 @@ A:HOVER {
 A.exref {
 	font-family0: sans-serif;
 	font-style: italic;
+	}
+A.brand_l {
+	color: #000000;
+	}
+A:VISITED.brand_l {
+	color: #000000;
+	}
+A:HOVER.brand_l {
+	text-decoration: none;
 	}
 .cat_rows {
 	font-family: sans-serif;
