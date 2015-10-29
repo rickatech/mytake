@@ -2,11 +2,11 @@
 include 'mobile_detect/Mobile_Detect.php';
 //  require_once '/Users/fredness/howto/public_html/php/test/Mobile-Detect-2.8.17/Mobile_Detect.php';
 $detect = new Mobile_Detect;    //  Include and instantiate the class.
-include 'session.php';
+include 'mytake/session.php';
 include "config.php";
-include "mytake.php";
-include "detect_dev.php";
-include "headfoot.php";
+include "mytake/mytake.php";
+include "mytake/detect_dev.php";
+include "mytake/headfoot.php";
 session_detect();
 $login_form = 'login disabled';
 login_state($login_form);
@@ -32,7 +32,7 @@ else {
 <LINK rel="stylesheet" type="text/css" href="base.css">
 <!--  typically only mobile devices recognize device-width, desktops ignore  -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script type="text/JavaScript" src="mytake.js"></script> 
+<script type="text/JavaScript" src="mytake/mytake.js"></script> 
 <script>
 	var desk_width = <?PHP  echo DESK_WIDTH_MIN;  ?>;
 	var desk_width_pad = <?PHP  echo DESK_WIDTH_PAD;  ?>;
