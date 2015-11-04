@@ -15,7 +15,8 @@ const DESK_WIDTH_MIN = 1024;
 const DESK_WIDTH_PAD =  144;
 
 //  toggle targeted features
-const FEATURE_COOK =1;  //  enabled cookie to remember username
+const FEATURE_COOK =   1;       //  enabled cookie to remember username
+const FEATURE_PROFILE = 2;      //  login user name has javascript profile call
 $feature_mask = FEATURE_COOK;
 
 //  toggle debug output

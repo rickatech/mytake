@@ -144,7 +144,10 @@ function login_state(&$out) {
 		}
 	if (isset($_SESSION['uid_dg'])) {
 		$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0px;\">";
-		$out .= $_SESSION['username_dg']." ";
+		if ($feature_mask & FEATURE_PROFILE)
+			$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg']."</a> ";
+		else
+			$out .= $_SESSION['username_dg']." ";
 		$out .= "<input name=\"logout\" value=\"yes\" type=\"hidden\">";
 		$out .= " <a href=\"javascript:head_logout();\">logout</a>";
 		$out .= "\n</form>";

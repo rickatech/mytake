@@ -22,4 +22,18 @@ else if($detect->isAndroidOS())
 	$notes .= ", isAndroid"; 
 else
 	$notes .= ", isOther"; 
+
+function dev_detect_head_meta() {
+	global $dflags, $debug_mask;
+
+	echo "\n<script>";
+	echo "\nvar desk_width = ".DESK_WIDTH_MIN;
+	echo "\nvar desk_width_pad = ".DESK_WIDTH_PAD;
+	echo "\nvar dflags = ".$dflags;
+	echo "\nvar debug_mask = ".$debug_mask;
+	echo "\nvar FLAG_MOBILE = 1;";
+	echo "\nvar xm = desk_width_pad << 1;";
+	echo "\n</script>";
+	}
+
 ?>

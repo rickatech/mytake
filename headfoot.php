@@ -1,5 +1,5 @@
 <?PHP
-function head_meta() {
+function head_meta_title() {
 	global $art_rec;
 	global $brand_t;
 
