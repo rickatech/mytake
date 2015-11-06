@@ -22,7 +22,8 @@ function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
                 while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
 		    if ($data[0] != 'ID') {  //  skip past column titles row
 			$mu = false;
-			if ($ua) {
+			if (1) {
+			//  if ($ua) {
 				$usrx = NULL;
 				if (!is_null($usr))
 					$usrx = $usr;

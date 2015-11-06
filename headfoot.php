@@ -9,25 +9,37 @@ function head_meta_title() {
 	echo "</TITLE>";
 	}
 
-function head_body() {
+function head_body($class = NULL, $pos = NULL) {
 	global $notes;
 	global $login_form;
 	global $h0, $h1;
 	global $dflags, $debug_mask;
 	global $brand_l;
 
-        echo "<div style=\"float: right; text-align: right;\"><span>".$login_form."</span>";
-	if ($debug_mask & 1)
-        	echo "\n<span>".$notes."</span> <span id='mt_msg'></span>";
-        echo "</div>";
-        echo "\n".$h0.$brand_l.$h1;
+	$dc = $class ? ' class='.$class : '';
+	if (!$pos) {  //  FUTURE - some of below should be a shared function?
+		//  position brand and login above / outside of main body div
+		echo "<div style=\"float: right; text-align: right;\"><span>".$login_form."</span>";
+		if ($debug_mask & 1)
+	        	echo "\n<span>".$notes."</span> <span id='mt_msg'></span>";
+	        echo "</div>";
+	        echo "\n".$h0.$brand_l.$h1;
+		}
+	echo "\n<div".$dc." id='main_div'";
         if (!$dflags & DFLAGS_MOBILE) {  // i.e. not mobile
-		echo "\n<div id='main_div'";
-		echo "\n  style=\"position: relative; width: 1024px;; background: #FFFFFF; border: solid; margin: auto;\">";
+		echo "\n  style=\"position: relative; width: 1024px; background: #FFFFFF; border: solid; margin: auto;\">";
         } else {
-		echo "\n<div id='main_div'";
 		echo "\n  style=\"position: relative; background: #FFFFFF; border: solid;\">";
         	}
+	if ($pos) {  //  FUTURE - some of below should be a shared function?
+		//  position brand and login above inside, top of main body div
+        	echo "<div style=\"float: right; text-align: right; padding-right: 3px; padding-top: 1px;\">";
+        	echo "<span>".$login_form."</span>";
+		if ($debug_mask & 1)
+			echo "\n<span>".$notes."</span> <span id='mt_msg'></span>";
+	        echo "</div>";
+        	echo "\n<div style=\"padding-top: 8px; padding-left: 4px; \">".$h0.$brand_l.$h1."</div>";
+		}
 	}
 
 function body_lowright () {
