@@ -189,8 +189,10 @@ function login_state(&$out) {
 	return (0);
 	}
 
-function get_user_profiles($file, &$users) {
-	//  pass in empty array
+function get_user_profiles($file, &$users, &$raw = NULL) {
+	//  $file    account file: ID#, handle
+	//  $users   pass in empty array, fill with [ID]['handle'] output
+	//  $raw     pass in empty array to collect raw rows (optional)
 	//  build array of ...
 	//  if error, ...
 	//  FUTURE: build a user profile class, allow custom (what this is), SQL, Facebook/OpenID support
@@ -201,10 +203,40 @@ function get_user_profiles($file, &$users) {
 				$va = array('handle' => $data[1]);
 				$users[$data[0]] = $va;
 				}
+			if (!is_null($raw))
+				array_push($raw, $data);
 			}
 		$result = true;
 		fclose($fh);
 		}
+	return $result;
+	}
+
+function put_user_profiles_raw($file, &$raw) {
+	//  $file    account file: ID#, handle, ...
+	//  $raw     raw array to overwirte file
+
+	//  put = shell_exec("cat ".$file." >> ".$file."_test_log; ls -lh ../bog");
+	$output = shell_exec("cat ".$file." >> ".$file."_test_log;");
+	$result = false;
+	//  echo "\n<pre>$output\n".$file."\n";
+	if ($fh = fopen($file, 'w')) {
+		foreach ($raw as $k => $v) {
+			$i = 0;
+			foreach ($v as $kk => $vv) {
+				//  echo "\n<br>".$kk." => ".$vv;
+				if ($i > 0) $str = ', "'.$vv.'"';
+				else        $str = $vv;
+				//  echo $str;
+				fwrite($fh, $str);  //  FUTURE, check if returns false?
+				$i++;
+				}
+			fwrite($fh, "\n");  //  FUTURE, check if returns false?
+			}
+		$result = true;
+		if ($fh) fclose($fh);
+		}
+	echo "</pre>";
 	return $result;
 	}
 ?>
