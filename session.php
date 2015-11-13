@@ -189,6 +189,14 @@ function login_state(&$out) {
 	return (0);
 	}
 
+//  FUTURE ... declare an 'account' class, refactor the following 
+const USERACCT_ID =   0;
+const USERACCT_HNDL = 1;
+const USERACCT_DATE = 2;
+const USERACCT_HASH = 3;
+const USERACCT_FNAM = 4;
+const USERACCT_MAIL = 5;
+
 function get_user_profiles($file, &$users, &$raw = NULL) {
 	//  $file    account file: ID#, handle
 	//  $users   pass in empty array, fill with [ID]['handle'] output
@@ -200,8 +208,12 @@ function get_user_profiles($file, &$users, &$raw = NULL) {
 	if ($fh = fopen($file, 'r')) {
 		while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
 			if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
-				$va = array('handle' => $data[1]);
-				$users[$data[0]] = $va;
+				$va = array('handle' => $data[USERACCT_HNDL]);
+				if (isset($data[USERACCT_DATE])) $va['date'] = $data[USERACCT_DATE];
+				if (isset($data[USERACCT_HASH])) $va['date'] = $data[USERACCT_HASH];
+				if (isset($data[USERACCT_FNAM])) $va['date'] = $data[USERACCT_FNAM];
+				if (isset($data[USERACCT_MAIL])) $va['date'] = $data[USERACCT_MAIL];
+				$users[$data[USERACCT_ID]] = $va;
 				}
 			if (!is_null($raw))
 				array_push($raw, $data);
@@ -216,18 +228,15 @@ function put_user_profiles_raw($file, &$raw) {
 	//  $file    account file: ID#, handle, ...
 	//  $raw     raw array to overwirte file
 
-	//  put = shell_exec("cat ".$file." >> ".$file."_test_log; ls -lh ../bog");
+	//  append log file with current account file contents (in case a revert is needed for some reason)
 	$output = shell_exec("cat ".$file." >> ".$file."_test_log;");
 	$result = false;
-	//  echo "\n<pre>$output\n".$file."\n";
 	if ($fh = fopen($file, 'w')) {
 		foreach ($raw as $k => $v) {
 			$i = 0;
 			foreach ($v as $kk => $vv) {
-				//  echo "\n<br>".$kk." => ".$vv;
 				if ($i > 0) $str = ', "'.$vv.'"';
 				else        $str = $vv;
-				//  echo $str;
 				fwrite($fh, $str);  //  FUTURE, check if returns false?
 				$i++;
 				}
