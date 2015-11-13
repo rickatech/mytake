@@ -193,7 +193,7 @@ function login_state(&$out) {
 const USERACCT_ID =   0;
 const USERACCT_HNDL = 1;
 const USERACCT_DATE = 2;
-const USERACCT_HASH = 3;
+const USERACCT_HASH = 3;  //  Doubles as password
 const USERACCT_FNAM = 4;
 const USERACCT_MAIL = 5;
 
@@ -245,7 +245,7 @@ function put_user_profiles_raw($file, &$raw) {
 		$result = true;
 		if ($fh) fclose($fh);
 		}
-	echo "</pre>";
+	//  echo "</pre>";
 	return $result;
 	}
 ?>
