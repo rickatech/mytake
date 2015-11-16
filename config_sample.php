@@ -1,6 +1,7 @@
 <?PHP
-$version = 'v0.0.2';
-$home_url = '/rickatech/mytake/';
+$version = 'v0.0.3';
+$home_url = '/';
+$actv_url = 'http://mytake.zaptech.com/';
 $edit_url = 'https://blog.zaptech.com/?file=mytake/';
 $data_dir = '/Users/fredness/zaptech/blog/content/mytake';
 $login_data = '/profiles_dev.txt';
