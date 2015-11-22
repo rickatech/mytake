@@ -122,6 +122,7 @@ function login_state(&$out) {
 	global $feature_mask;
 	global $cookie_expire;
 	global $cookie_url;
+	global $menu_mark, $menu_full;
 
 	/*  Assumes a form with name=login, type=post is being used.  */
 	/*  return 1  login accepted - output logout  */
@@ -143,14 +144,16 @@ function login_state(&$out) {
 			}
 		}
 	if (isset($_SESSION['uid_dg'])) {
-		$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0px;\">";
+		$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"display: inline-block; vertical-align: top;\">";
 		if ($feature_mask & FEATURE_PROFILE)
 			$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg']."</a> ";
 		else
 			$out .= $_SESSION['username_dg']." ";
 		$out .= "<input name=\"logout\" value=\"yes\" type=\"hidden\">";
-		$out .= " <a href=\"javascript:head_logout();\">logout</a>";
+		$out .= "<br>".$menu_mark;
+		$out .= "<br><a href=\"javascript:head_logout();\">logout</a>";
 		$out .= "\n</form>";
+		$out .= "<img src=/gfx/avatar_rickatech.gif style=\"margin-left: 4px;\">";
 		return (1);
 		}
 
@@ -170,22 +173,72 @@ function login_state(&$out) {
 			}	
 		}
 
-	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0px;\">";
-	if (isset($msg))
-		$out .= "<span style=\"color: #ff0000;\">".$msg."</span> ";
-	$out .= "<a href=\"javascript: formpop('signup');\">signup</a> ";
+	if (!isset($msg)) {  /*  !!!  $dflags & DFLAGS_MOBILE  */
+	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0; padding: 0; display: inline-block; vertical-align: top; background-color: yellow;\">";
+	$out .= "<span id=\"login_lab\" ";
+	$out .= isset($msg) ? "style=\"display: none;\" " : '';
+	$out .= "onClick=\"login_fields_toggle();\">login</span>";
 
-	$out .= "\n<input size=12               name=\"username_dg\" id=\"username_dg\" style=\"font-size: 10px; border: 1px solid;\"";
-	$out .= " value=\"".$defuname."\" onKeyPress=\"detectKeyLogin(event)\"";
-	$out .= " onfocus=\"if(this.value == 'username') {this.value = '';}\"";
-	$out .= " onblur=\"if(this.value == '') {this.value = 'username';}\">";
+	  $out .= "\n<input size=12";
+	  $out .= " name=\"username_dg\" id=\"username_dg\" style=\"font-size: 10px; border: 1px solid;";
+	  $out .= ' display: none;"';
+	  $out .= " value=\"".$defuname."\" onKeyPress=\"detectKeyLogin(event)\"";
+	  $out .= " onfocus=\"if(this.value == 'username') {this.value = '';}\"";
+	  $out .= " onblur=\"if(this.value == '') {this.value = 'username';}\">";
 
-	$out .= "\n<input size=12 type=password name=\"password\" id=\"password\" style=\"font-size: 10px; border: 1px solid;\"";
-	$out .= " value=\"password\" onKeyDown=\"detectKeyLogin(event)\"";
-	$out .= " onfocus=\"if(this.value == 'password') {this.value = '';}\"";
-	$out .= " onblur=\"if(this.value == '') {this.value = 'password';}\">";
-
+	$out .= "<span id=\"menu_lab\"";
+	$out .= isset($msg) ? " style=\"display: none;\" " : '';
+	//$out .= "><br>".$menu_mark."</span>";
+	$out .= ">".$menu_mark."</span>";
+	  $out .= "\n<input size=12 type=password";
+	  $out .= " name=\"password\" id=\"password\" style=\"font-size: 10px; border: 1px solid;";
+	  $out .= ' display: none;"';
+	  $out .= " value=\"password\" onKeyDown=\"detectKeyLogin(event)\"";
+	  $out .= " onfocus=\"if(this.value == 'password') {this.value = '';}\"";
+	  $out .= " onblur=\"if(this.value == '') {this.value = 'password';}\">";
+	$out .= "<span id=\"msg_err\" style=\"display: none;\" onClick=\"login_fields_toggle();\">reset</span>";
+	//$out .= "<br><a id=\"signin_lab\" ";
+	$out .= "<a id=\"signin_lab\" ";
+	$out .= isset($msg) ? "style=\"display: none;\" " : '';
+	$out .= "href=\"javascript: formpop('signup');\">signup</a> ";
 	$out .= "\n</form>";
+//	$out .= "<div id=\"login_key\" style=\"display: inline-block;\"><a onClick=\"login_fields_toggle();\"><img0 src=/gfx/login_55x.png style=\"margin-left: 4px;\"></a></div>";
+		}  /*  !!!  */
+	else {  /*  !!!  */
+	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"display: inline-block; vertical-align: top;\">";
+	$out .= "<span id=\"login_lab\" ";
+	$out .= isset($msg) ? "style=\"display: none;\" " : '';
+	$out .= "onClick=\"login_fields_toggle();\">login</span>";
+
+	  $out .= "\n<input size=12";
+	  $out .= " name=\"username_dg\" id=\"username_dg\" style=\"font-size: 10px; border: 1px solid;\"";
+	  //$out .= isset($msg) ? '"' : ' display: none;"';
+	  $out .= " value=\"".$defuname."\" onKeyPress=\"detectKeyLogin(event)\"";
+	  $out .= " onfocus=\"if(this.value == 'username') {this.value = '';}\"";
+	  $out .= " onblur=\"if(this.value == '') {this.value = 'username';}\">";
+
+	//$out .= "<br>MM<span id=\"menu_lab\"";
+	$out .= "<span id=\"menu_lab\"";
+	$out .= isset($msg) ? " style=\"display: none;\" " : '';
+	$out .= ">".$menu_mark."</span>";
+	  $out .= "\n<input size=12 type=password";
+	  $out .= " name=\"password\" id=\"password\" style=\"font-size: 10px; border: 1px solid;\"";
+	  //$out .= isset($msg) ? '"' : ' display: none;"';
+	  $out .= " value=\"password\" onKeyDown=\"detectKeyLogin(event)\"";
+	  $out .= " onfocus=\"if(this.value == 'password') {this.value = '';}\"";
+	  $out .= " onblur=\"if(this.value == '') {this.value = 'password';}\">";
+	if (isset($msg))
+		//$out .= "<br>NN<span id=\"msg_err\" style=\"color: #ff0000;\" onClick=\"login_fields_toggle();\">".$msg."</span>";
+		$out .= "<span id=\"msg_err\" style=\"color: #ff0000;\" onClick=\"login_fields_toggle();\">".$msg."</span>";
+	else
+		$out .= "<span id=\"msg_err\" style=\"display: none;\" onClick=\"login_fields_toggle();\">reset</span>";
+	//$out .= "<br><a id=\"signin_lab\" ";
+	$out .= "<a id=\"signin_lab\" ";
+	$out .= "style=\"display: none;\" ";
+	$out .= "href=\"javascript: formpop('signup');\">signup</a> ";
+	$out .= "\n</form>";
+//	$out .= "<div id=\"login_key\" style=\"display: inline-block;\"><a onClick=\"login_fields_toggle();\"><img0 src=/gfx/login_55x.png style=\"margin-left: 4px;\"></a></div>";
+		}  /*  !!!  */
 	return (0);
 	}
 

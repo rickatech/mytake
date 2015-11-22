@@ -7,6 +7,9 @@ $data_dir = '/Users/fredness/zaptech/blog/content/mytake';
 $login_data = '/profiles_dev.txt';
 $catalog_data = $data_dir.'/data_cp';
 
+$menu_mark = 'MENU';
+$menu_full = 'pivot | go | dashboard | providers | search';
+
 $brand_t = "rickatech - MyTake";
 $brand_l = "<b>My Take</b>";
 $brand_l = "<span style=\"font-family: sans-serif; font-size: 300%;\"><b>holistik</b> </span>";

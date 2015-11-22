@@ -18,6 +18,7 @@ function head_body($class = NULL, $pos = NULL) {
 
 	$dc = $class ? ' class='.$class : '';
 	if (!$pos) {  //  FUTURE - some of below should be a shared function?
+		echo "\n<div id=\"login_up\" style=\"position: absolute; right: 0px; top: 0; text-align: right;\">TEST</div>";
 		//  position brand and login above / outside of main body div
 		echo "<div style=\"float: right; text-align: right;\"><span>".$login_form."</span>";
 		if ($debug_mask & 1)
@@ -32,13 +33,14 @@ function head_body($class = NULL, $pos = NULL) {
 		echo "\n  style=\"position: relative; background: #FFFFFF; border: solid;\">";
         	}
 	if ($pos) {  //  FUTURE - some of below should be a shared function?
+		echo "\n<div id=\"login_up\" style=\"position: absolute; right: 0px; top: 0; margin: 4px; text-align: right;\">".$login_form."</div>";
 		//  position brand and login above inside, top of main body div
         	echo "<div style=\"float: right; text-align: right; padding-right: 3px; padding-top: 1px;\">";
-        	echo "<span>".$login_form."</span>";
+        	echo "<span>OLD</span>";
 		if ($debug_mask & 1)
 			echo "\n<span>".$notes."</span> <span id='mt_msg'></span>";
 	        echo "</div>";
-        	echo "\n<div style=\"padding-top: 8px; padding-left: 4px; \">".$h0.$brand_l.$h1."</div>";
+        	echo "\n<div style=\"padding-top: 8px; padding-left: 4px;\">".$h0.$brand_l.$h1."</div>";
 		}
 	}
 
