@@ -153,7 +153,7 @@ function login_state(&$out) {
 		$out .= "<br>".$menu_mark;
 		$out .= "<br><a href=\"javascript:head_logout();\">logout</a>";
 		$out .= "\n</form>";
-		$out .= "<img src=/gfx/avatar_rickatech.gif style=\"margin-left: 4px;\">";
+		$out .= '<img src=/gfx/avatar_'.$_SESSION['username_dg'].'_min.gif style="margin-left: 4px;">';
 		return (1);
 		}
 
@@ -282,6 +282,8 @@ function put_user_profiles_raw($file, &$raw) {
 	//  $raw     raw array to overwirte file
 
 	//  append log file with current account file contents (in case a revert is needed for some reason)
+	//  FUTURE, fwrite($fp, date('Y-m-d H:i:s'));
+	//  FUTURE, fwrite($fp, "\n-------------------\n");
 	$output = shell_exec("cat ".$file." >> ".$file."_test_log;");
 	$result = false;
 	if ($fh = fopen($file, 'w')) {
