@@ -263,9 +263,9 @@ function get_user_profiles($file, &$users, &$raw = NULL) {
 			if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
 				$va = array('handle' => $data[USERACCT_HNDL]);
 				if (isset($data[USERACCT_DATE])) $va['date'] = $data[USERACCT_DATE];
-				if (isset($data[USERACCT_HASH])) $va['date'] = $data[USERACCT_HASH];
-				if (isset($data[USERACCT_FNAM])) $va['date'] = $data[USERACCT_FNAM];
-				if (isset($data[USERACCT_MAIL])) $va['date'] = $data[USERACCT_MAIL];
+				if (isset($data[USERACCT_HASH])) $va['hash'] = $data[USERACCT_HASH];
+				if (isset($data[USERACCT_FNAM])) $va['fnam'] = $data[USERACCT_FNAM];
+				if (isset($data[USERACCT_MAIL])) $va['mail'] = $data[USERACCT_MAIL];
 				$users[$data[USERACCT_ID]] = $va;
 				}
 			if (!is_null($raw))
