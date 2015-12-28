@@ -145,28 +145,22 @@ function login_state(&$out, $hint = NULL) {
 		}
 	if (isset($_SESSION['uid_dg'])) {
 		$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"display: inline-block; vertical-align: top;\">";
+		$out .= "<input name=\"logout\" value=\"yes\" type=\"hidden\">";  //  FUTURE - is this still needed?
+		if ($feature_mask & FEATURE_PROFILE)
+			$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg'].'</a>';
+		else
+			$out .= $_SESSION['username_dg']." ";
 		if ($hint) {
-			$out .= "<input name=\"logout\" value=\"yes\" type=\"hidden\">";
-			$out .= "<a href=\"javascript:head_logout();\">logout</a> | ";
-			if ($feature_mask & FEATURE_PROFILE)
-				$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg']."</a> ";
-			else
-				$out .= $_SESSION['username_dg']." ";
 			if (isset($menu_mark))  //  if no menu string defined, conserve space and skip new line
-				$out .= "<br>".$menu_mark;
+				$out .= ' '.$menu_mark;
+			$out .= "\n</form>";
+			//  omit mini avatar
 			}
 		else {
-			if ($feature_mask & FEATURE_PROFILE)
-				$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg']."</a> ";
-			else
-				$out .= $_SESSION['username_dg']." ";
-			$out .= "<input name=\"logout\" value=\"yes\" type=\"hidden\">";
 			if (isset($menu_mark))  //  if no menu string defined, conserve space and skip new line
 				$out .= "<br>".$menu_mark;
 			$out .= "<br><a href=\"javascript:head_logout();\">logout</a>";
-			}
-		$out .= "\n</form>";
-		if (0) {
+			$out .= "\n</form>";
 			$out .= '<img src=/gfx/avatar_'.$_SESSION['username_dg'].'_min.gif style="margin-left: 4px;">';
 			}
 		return (1);
@@ -189,7 +183,7 @@ function login_state(&$out, $hint = NULL) {
 		}
 
 	/*  !!!  $dflags & DFLAGS_MOBILE  */
-	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0; padding: 0; display: inline-block; vertical-align0: top;\">";
+	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0; padding: 0; display: inline-block; vertical-align: top; background-color: pink\">";
 	//  $out  = ... background-color: yellow;\">";
 
 	$out .= "<span id=\"login_lab\" ";
