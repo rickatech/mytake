@@ -146,17 +146,22 @@ function login_state(&$out, $hint = NULL) {
 	if (isset($_SESSION['uid_dg'])) {
 		$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"display: inline-block; vertical-align: top;\">";
 		$out .= "<input name=\"logout\" value=\"yes\" type=\"hidden\">";  //  FUTURE - is this still needed?
-		if ($feature_mask & FEATURE_PROFILE)
-			$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg'].'</a>';
-		else
-			$out .= $_SESSION['username_dg']." ";
 		if ($hint) {
 			if (isset($menu_mark))  //  if no menu string defined, conserve space and skip new line
 				$out .= ' '.$menu_mark;
+			$out .= "<a href=\"javascript:head_logout();\">logout</a> | ";
+			if ($feature_mask & FEATURE_PROFILE)
+				$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg'].'</a>';
+			else
+				$out .= $_SESSION['username_dg']." ";
 			$out .= "\n</form>";
 			//  omit mini avatar
 			}
 		else {
+			if ($feature_mask & FEATURE_PROFILE)
+				$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg'].'</a>';
+			else
+				$out .= $_SESSION['username_dg']." ";
 			if (isset($menu_mark))  //  if no menu string defined, conserve space and skip new line
 				$out .= "<br>".$menu_mark;
 			$out .= "<br><a href=\"javascript:head_logout();\">logout</a>";
@@ -186,9 +191,10 @@ function login_state(&$out, $hint = NULL) {
 	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0; padding: 0; display: inline-block; vertical-align: top; background-color: pink\">";
 	//  $out  = ... background-color: yellow;\">";
 
-	$out .= "<span id=\"login_lab\" ";
-	$out .= isset($msg) ? "style=\"display: none;\" " : '';
-	$out .= "onClick=\"login_fields_toggle();\">login</span>";
+	$out .= "<span id=\"login_lab\"";
+	$out .= isset($msg) ? " style=\"display: none;\">" : '>';
+	$out .= "<span onClick=\"login_fields_toggle();\">login</span>";
+	$out .= isset($hint) ? ' | </span>' : '</span>';
 
 	$out .= "\n<input size=12";
 	$out .= " name=\"username_dg\" id=\"username_dg\" style=\"font-size: 10px; border: 1px solid;";
@@ -207,6 +213,7 @@ function login_state(&$out, $hint = NULL) {
 	$out .= " value=\"password\" onKeyDown=\"detectKeyLogin(event)\"";
 	$out .= " onfocus=\"if(this.value == 'password') {this.value = '';}\"";
 	$out .= " onblur=\"if(this.value == '') {this.value = 'password';}\">";
+	$out .= isset($hint) ? ' ' : '';
 	if (isset($msg))
 		$out .= "<span id=\"msg_err\" style=\"color: #ff0000;\" onClick=\"login_fields_toggle();\">".$msg."</span>";
 	else
