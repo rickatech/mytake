@@ -125,6 +125,8 @@ function login_state(&$out, $hint = NULL) {
 	global $menu_mark, $menu_full;
 
 	/*  Assumes a form with name=login, type=post is being used.  */
+	/*    hint    adjust formatting/presentation of login form
+	/*            depends also on javascript login_fields_toggle
 	/*  return 1  login accepted - output logout  */
 	/*  return 0  invalid login - output username, password form  */
 	if (isset($_POST['username_dg']) && isset($_POST['password'])) {  // clasic POST form
