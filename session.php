@@ -192,24 +192,26 @@ function login_state(&$out, $hint = NULL) {
 	//  $out  = ... background-color: yellow;\">";
 
 	$out .= "<span id=\"login_lab\"";
-	$out .= isset($msg) ? " style=\"display: none;\">" : '>';
+//	$out .= isset($msg) ? " style=\"display: none;\">" : '>';
+	$out .= isset($msg) ? " style=\"display: none;\">" : (isset($hint) ? '>' : ' style="display: block;">');
 	$out .= "<span onClick=\"login_fields_toggle();\">login</span>";
 	$out .= isset($hint) ? ' | </span>' : '</span>';
 
 	$out .= "\n<input size=12";
 	$out .= " name=\"username_dg\" id=\"username_dg\" style=\"font-size: 10px; border: 1px solid;";
-	$out .= isset($msg) ? '"' : ' display: none;"';
+//	$out .= isset($msg) ? '"' : ' display: none;"';
+	$out .= isset($msg) ? (isset($hint) ? '"' : ' display: block;"') : ' display: none;"';
 	$out .= " value=\"".$defuname."\" onKeyPress=\"detectKeyLogin(event)\"";
 	$out .= " onfocus=\"if(this.value == 'username') {this.value = '';}\"";
 	$out .= " onblur=\"if(this.value == '') {this.value = 'username';}\">";
 
 	$out .= "<span id=\"menu_lab\"";
-	$out .= isset($msg) ? ' style="display: none;" ' : '';
+	$out .= isset($msg) ? ' style="display: none;" ' : (isset($hint) ? '' : ' style="display: block;"');
 	$out .= '>'.$menu_mark.'</span>';
 
 	$out .= "\n<input size=12 type=password";
 	$out .= " name=\"password\" id=\"password\" style=\"font-size: 10px; border: 1px solid;";
-	$out .= isset($msg) ? '"' : ' display: none;"';
+	$out .= isset($msg) ? (isset($hint) ? '"' : ' display: block;"') : ' display: none;"';
 	$out .= " value=\"password\" onKeyDown=\"detectKeyLogin(event)\"";
 	$out .= " onfocus=\"if(this.value == 'password') {this.value = '';}\"";
 	$out .= " onblur=\"if(this.value == '') {this.value = 'password';}\">";
@@ -220,7 +222,8 @@ function login_state(&$out, $hint = NULL) {
 		$out .= "<span id=\"msg_err\" style=\"display: none;\" onClick=\"login_fields_toggle();\">reset</span>";
 
 	$out .= "<a id=\"signin_lab\" ";
-	$out .= isset($msg) ? "style=\"display: none;\" " : '';
+//	$out .= isset($msg) ? "style=\"display: none;\" " : "style=\"display: block;\" ";
+	$out .= isset($msg) ? "style=\"display: none;\" " : (isset($hint) ? ' ' : ' style="display: block;" ');
 	$out .= "href=\"javascript: formpop('signup');\">signup</a> ";
 //	$out .= "<div id=\"login_key\" style=\"display: inline-block;\"><a onClick=\"login_fields_toggle();\"><img0 src=/gfx/login_55x.png style=\"margin-left: 4px;\"></a></div>";
 
