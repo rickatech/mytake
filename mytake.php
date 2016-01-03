@@ -6,6 +6,8 @@ function ap($a) {
 	echo "</pre>";
 	}
 
+//  FUTURE - following can be rolled into a static class
+
 function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
         //  read in 'nosql' data file, return array
 	//  tag     tag to match, NULL match all tags
@@ -80,10 +82,13 @@ function catalog_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab 
 
 	$data = get_map($catalog_data, $tag, $art, $usr);
 	//  $data = get_map($catalog_data, $tag, $art, session_username_active());
-	if (is_null($data))
-		return;
-	if (sizeof($data) < 1)
-		return;
+	if (is_null($data) || sizeof($data) < 1) {
+		if ($tag != 'ondeck')  //  even if no list returned, need to show create button
+			return;
+		$nd = true;  //  no data returned
+		}
+	else
+		$nd = false; //  data returned
 	echo "\n<div class=list_body>\n";
 	//  without overflow: hidden, spacing is weird
 	echo "\n<div class=list_head>\n";
@@ -102,6 +107,7 @@ function catalog_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab 
 		echo "</a></B>\n";
 		}
 	echo "</div>";
+	if (!$nd) {  /*  nd  */
 	foreach($data as $da) {
 		$da_tag = explode('|', $da[3]);
 		$da_cap = explode('|', $da[2]);
@@ -130,8 +136,9 @@ function catalog_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab 
 		if ($f) echo "\n  <p style=\"font-size: smaller; margin-bottom: 0;\">".$str."</p>";
 		echo "</div>";
 		}
-	//  without overflow: hidden, spacing is weirdi, marry this + title above = 72px;
-	echo "\n<div class=list_tail>... </div>\n";
+	    }  /*  nd  */
+	//  without overflow: hidden, spacing is weird, marry this + title above = 72px;
+	echo "\n<div class=list_tail>".($tag == 'ondeck' ? '[create]' : '... ')."</div>\n";
 	echo "\n</div>\n";
 	}
 
