@@ -2,22 +2,28 @@ SETUP
 
 Various layouts and moods can leverage mytake functions,
 however the initial files to load will need some customization.
-index.php and base.css must be created by copying samples
-provided in subfolders mt and hs, or with an new equivelent.
-Either provide template for how calls can be made to
-mytake functions.  It does require article catalog file with references
-to pre-loaded imags (beyond the scope of this version to provide
+index.php, base.css, base,js must be created by copying samples
+provided in subfolders mt and hs, or with an new equivelents.
+An article catalog file with references to pre-loaded images
+needs to be created (beyond the scope of this version to provide
 secondary samples of those ... for now).
 
 
 TO DO
-
-If there is no bog, then don't present a link.
 
 Build equivelnet tag lists for Read, Tunes, Flicks, WTF
 
 Make all tag words links to record matching page.  Or at least
 major tags are links
 
-On fully article view, insert the title and byline from data record,
-also list the tags on the top
+
+SMOKE TESTS
+
+Login, Logoff
+  - make sure ondeck articles only display when author is logged in user
+
+Full Article View
+  - Find a user with an ondeck article, click and view full article.
+    Copy the URL, logout, manually go to the URL make sure redirect to dashboard.
+    Repeat URL with logged user other than article author.
+    
