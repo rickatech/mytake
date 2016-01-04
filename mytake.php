@@ -8,8 +8,16 @@ function ap($a) {
 
 //  FUTURE - following can be rolled into a static class
 
+const CONTENT_ORD = 0;  //  ...
+const CONTENT_UID = 1;
+const CONTENT_BYL = 2;  //  title | date, author
+const CONTENT_TAG = 3;
+const CONTENT_IMG = 4;
+const CONTENT_URL = 5;
+
 function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
-        //  read in 'nosql' data file, return array
+        //  return  array containing article catalog
+	//          NULL if article not found or is ondeck but author is not logged in user
 	//  tag     tag to match, NULL match all tags
 	//          ignore elements matching 'ondeck' unless specifcally passed
 	//  art     article ID to match, NULL match all article ID's
@@ -22,43 +30,49 @@ function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
         if ($fh = fopen($filename, 'r')) {
 		$ua = is_null(session_userid_active()) ? false : true;
                 while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
-		    if ($data[0] != 'ID') {  //  skip past column titles row
+		    if ($data[CONTENT_ORD][0] != '#' && $data[CONTENT_ORD] != 'ID') {  //  skip past column titles row
 			$mu = false;
-			if (1) {
-			//  if ($ua) {
+			$mux = false;
+			if (!is_null($usr))
+				$usrx = $usr;                        //  usrx = usr passed in
+		//	else if ($tag == 'ondeck' && is_null($usr))
+			else if ($tag == 'ondeck')
+				$usrx = session_username_active();   //  usrx = active logged in user/NULL if tag passed in is ondeck
+			else
 				$usrx = NULL;
-				if (!is_null($usr))
-					$usrx = $usr;
-				else if ($tag == 'ondeck' && is_null($usr))
-					$usrx = session_username_active();
-				if (!is_null($usrx)) {  //  see if content author matches logged in user
-					$da_cap = explode('|', $data[2]);
-					//  echo "\n<br>test: ".$usr.", ".$da_cap[1];
-					if (isset($da_cap[1]) && strstr($da_cap[1], $usrx))
-						$mu = true;
-					}
+			$da_cap = explode('|', $data[CONTENT_BYL]);  //  FUTURE, seperate date, UID, and username with additional |
+			if (!is_null($usrx)) {  //  see if content author matches logged in user
+				if (isset($da_cap[1]) && strstr($da_cap[1], $usrx))
+					$mu = true;  //  passed in user or ondeck active online user matches byline author
+				}
+			else if (session_username_active()) {  //  ...
+				if (isset($da_cap[1]) && strstr($da_cap[1], session_username_active()))
+					$mux = true;  //  active logged in user matches byline author
 				}
 			$od = false;
 			$m = false;
-			$ta = explode('|', $data[3]);
+			$ta = explode('|', $data[CONTENT_TAG]);
 			foreach($ta as $t) {
-				if ($t == 'ondeck') {
-					$od = true;  }
-				if (!is_null($tag) && $t == $tag) {
-					$m = true;  }
+				if ($t == 'ondeck')
+					$od = true;
+				if (!is_null($tag) && $t == $tag)
+					$m = true;
 				}
 			if (!is_null($art)) {
-				if ($data[1] == $art)
-					$m = true;
+				if ($data[CONTENT_UID] == $art)
+				//	$m = true;
+					$m = ($od ? $mux : true);  //  return false if ondeck tag and author is not logged in user
 				}
 			else if (is_null($tag))
 				$m = true;
-			if (!is_null($usr)) {  //  see if content author matches logged in user
+			if (!is_null($usr)) {  //  see if passed in or ondeck usr matches content author
 				if ($m) $m = $mu;
 				}
 			//  only show ondeck items if ondeck tag passed in, and author matches logged in user
 			if ($m && $tag != 'ondeck') {
-				$m = $od ? false : true;
+//				$m = $od ? false : true;
+				//  okay to show with ondeck if article passed in and logged in user is author
+				$m = $od ? (!(is_null($art)) ? $mux : false) : true;
 				}
 			else if ($m)
 				$m = $mu;
@@ -143,19 +157,21 @@ function catalog_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab 
 	}
 
 function article($art = NULL) {
+	//  return  array of article attibutes, success
+	//          NULL if not found
 	global $dflags;
 	global $edit_url;
 	global $catalog_data;
 
-	if (is_null($art))
-		return NULL;
-	$da = get_map($catalog_data, NULL, $art);
-	$da_cap = explode('|', $da[0][2]);
-	$da_tag = explode('|', $da[0][3]);
-	return array(
-	  "article" => $art,
-	  "caption" => $da_cap,
-	  "tags" =>    $da_tag);
+	if (!is_null($art) && $da = get_map($catalog_data, NULL, $art)) {
+		$da_cap = explode('|', $da[0][2]);
+		$da_tag = explode('|', $da[0][3]);
+		return array(
+		  "article" => $art,
+		  "caption" => $da_cap,
+		  "tags" =>    $da_tag);
+		}
+	return NULL;
 	}
 
 function article_out($artrec) {
