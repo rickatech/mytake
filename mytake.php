@@ -107,12 +107,12 @@ function catalog_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab 
 	//  without overflow: hidden, spacing is weird
 	echo "\n<div class=list_head>\n";
 	if (!is_null($lab))
-		echo "&nbsp;<B>".$lab."</B>\n";
+		echo "<B>".$lab."</B>\n";
 	else if (is_null($tag)) {
-		echo "&nbsp;<B>Latest</B>\n";
+		echo "<B>Latest</B>\n";
 		}
 	else {
-		echo "&nbsp;<B><a href=?tag=".$tag.">";  //  FUTURE: omit link if superfluous
+		echo "<B><a href=?tag=".$tag.">";  //  FUTURE: omit link if superfluous
 		if ($tag == 'music')  echo 'Tunes';
 		else if ($tag == 'book')   echo 'Read';
 		else if ($tag == 'film')   echo 'Filcks';
@@ -138,7 +138,7 @@ function catalog_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab 
 			$a0 ='';  $a1 = '';  }
 		//  without overflow: hidden, spacing is weird
 		echo "\n<div class=\"cat_rows\" style=\"clear: both; overflow: hidden;\">".$a0.
-		  "<img src=\"gfx/".$da[4]."\" align=left style=\"width: 68px; margin: 2px;\">".$a1;
+		  "<img src=\"gfx/".$da[4]."\" align=left style=\"width: 72px; margin: 0;\">".$a1;
 		echo "<p style=\"margin: 0;\">".(isset($da_cap[0]) ? $a0.$da_cap[0].$a1 : '');
 		echo "<span style=\"font-size: smaller;\">\n  <br>".(isset($da_cap[1]) ? $da_cap[1] : '')."</span></p>";
 		$f = false; $str = '';
@@ -198,6 +198,55 @@ function article_out($artrec) {
 	echo "<span style=\"color: grey;\"><br>".(isset($artrec['caption'][1]) ? $artrec['caption'][1] : '')."</span></p>";
 	/*  using readfile() purposely insures PHP commands in file are ignored  */
 	readfile($data_dir.'/'.$artrec['article']);
+	}
+
+function exchange_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab = NULL) {
+	global $catalog_data, $dflags;
+
+	$data = get_map($catalog_data, $tag, $art, $usr);
+	//  $data = get_map($catalog_data, $tag, $art, session_username_active());
+	if (is_null($data) || sizeof($data) < 1) {
+		if ($tag != 'ondeck')  //  even if no list returned, need to show create button
+			return;
+		$nd = true;  //  no data returned
+		}
+	else
+		$nd = false; //  data returned
+
+	if (!$nd) {  /*  nd  */
+	foreach($data as $da) {
+		$da_tag = explode('|', $da[3]);
+		$da_cap = explode('|', $da[2]);
+		if (isset($da[1])) {
+			/*  FUTURE: make this an ajax call  */
+			if (strlen($da[5]) > 0) {
+				$a0 = "<a class=exref\n  href=\"".$da[5]."\">";
+				$a1 = "</a>";  }
+			else {
+				$a0 = "<b><a\n   href=\"?art=".$da[1]."\">";
+				$a1 = "</a></b>";  }
+			}
+		else {
+			$a0 ='';  $a1 = '';  }
+		//  without overflow: hidden, spacing is weird
+		echo "\n<div class=\"cat_rows\" style=\"background-color: #ffefef; clear: both; overflow: hidden;\">".$a0.
+		  "<img src=\"gfx/".$da[4]."\" align=left style=\"width: 72px; margin: 0;\">".$a1;
+		echo "<p style=\"margin: 0;\">".(isset($da_cap[0]) ? $a0.$da_cap[0].$a1 : '');
+		echo "<span style=\"font-size: smaller;\">\n  <br>".(isset($da_cap[1]) ? $da_cap[1] : '')."</span></p>";
+		$f = false; $str = '';
+		foreach ($da_tag as $i) {
+			if (!$f) $f = true;
+			else $str .= ", ";
+			$str .= $i;
+			}
+		if ($f) echo "\n  <p style=\"font-size: smaller; margin-bottom: 0;\">".$str."</p>";
+		echo "</div>";
+		}
+	    }  /*  nd  */
+	//  without overflow: hidden, spacing is weird, marry this + title above = 72px;
+	echo "\n<div class=list_tail>".(session_userid_active() ? '[<a href=?artex>create</a>]' : '... ')."</div>\n";
+//	echo "\n<div class=list_tail>".($tag == 'ondeck' ? '[create]' : '... ')."</div>\n";
+//	echo "\n<div class=list_tail>[create]</div>\n";
 	}
 
 function tunes($mode) {
