@@ -6,14 +6,50 @@ function ap($a) {
 	echo "</pre>";
 	}
 
-//  FUTURE - following can be rolled into a static class
-
 const CONTENT_ORD = 0;  //  ...
 const CONTENT_UID = 1;
 const CONTENT_BYL = 2;  //  title | date, author
 const CONTENT_TAG = 3;
 const CONTENT_IMG = 4;
 const CONTENT_URL = 5;
+
+class acat {
+	//  collection of tools for updating article catalog
+
+	static public $acat = NULL;
+
+	static public function get($file) {
+		acat::$acat = get_map($file);
+		}
+
+	static public function write($file, $c) {
+		$result = false;
+		echo "write::".$file;
+		if ($fh = fopen($file, 'w')) {  //  if file does not exist it will be created
+			//  FUTURE, check if returns false, try/catch?
+			$str =  "# ord, id_readable, ...\n";
+			fwrite($fh, $str);
+			$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
+			foreach ($c as $k => $v) {
+				echo "\n<br>".$k.' / ';
+				if (isset($v['ord']))
+					$o = $v['ord'];
+				ap($v);
+				$str = $o.', "'.$v['title']."\"\n";
+			//	$str =  '<span id="'.$k.'">'.$v."</span>\n";
+				echo '<p>'.$str.'</p>';
+				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+				$o++;
+				}
+			$result = true;
+			if ($fh) fclose($fh);
+			}
+		return $result;
+		}
+
+	}  //  acat [end]
+
+//  FUTURE - following can be rolled into a static class (see above)
 
 function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
         //  return  array containing article catalog
@@ -248,103 +284,5 @@ function exchange_latest($nlist = 4, $tag = NULL, $art = NULL, $usr = NULL, $lab
 //	echo "\n<div class=list_tail>".($tag == 'ondeck' ? '[create]' : '... ')."</div>\n";
 //	echo "\n<div class=list_tail>[create]</div>\n";
 	}
-
-function tunes($mode) {
-    /*  mode = 0  comma, recent only
-    /*         1  LI list, all  */
-
-    if ($mode == 1)
-      echo "\n<LI>";
-    echo "<A HREF=http://myspace.com/autolux>Autolux</A>";
-    echo " - Turnstile Blues";
-    if ($mode == 1) {
-        echo "\n<BR>Discovered 2007-11";
-        echo "\n<BR><IMG SRC=http://b6.ac-images.myspacecdn.com/00202/62/80/202560826_m.jpg>";
-        }
-    
-    if ($mode == 1)
-      echo "\n<LI>";
-    else
-      echo ", ";
-    echo "<A HREF=http://www.peterbjornandjohn.com/>PBJ</A>";
-    echo "&nbsp;-&nbsp;<A HREF=http://www.peterbjornandjohn.com/Pages/MusicVideo.html>Young&nbsp;folks</A>";
-    if ($mode == 1) {
-        echo "\n<BR>Discovered 2007-10";
-        echo "\n<BR><IMG SRC=http://www.peterbjornandjohn.com/Images/record_youngfolks.jpg>";
-        }
-
-    if ($mode == 1) {
-        echo "\n<LI>";
-        echo "Gorecki";
-        echo "&nbsp;-&nbsp;3rd Symphony";
-        echo "\n<BR>Discovered 200?";
-        }
-
-    }
-
-function read($mode) {
-    if ($mode == 1)
-      echo "\n<LI>";
-    echo "<A HREF=http://www.readinggroupguides.com/guides3/friend_of_the_earth1.asp>A Friend of the Earth</A>";
-    echo " - <a href=http://www.tcboyle.com/>T&nbsp;C&nbsp;Boyle</a>";
-    if ($mode == 1) {
-        echo "\n<BR>reading";
-        }
-
-    if ($mode == 1)
-      echo "\n<LI>";
-    else
-      echo ", ";
-    echo "Counting Heads";
-    echo " - <a href=http://en.wikipedia.org/wiki/David_Marusek>David&nbsp;Marusek</a>";
-    if ($mode == 1) {
-        echo "\n<BR>read 2008-01";
-        }
-
-    if ($mode == 1)
-      echo "\n<LI>";
-    else
-      echo ", ";
-    echo "<a href=http://en.wikipedia.org/wiki/Flush_%28novel%29>Flush</a>";
-    echo " - Carl&nbsp;Hiaasen";
-    if ($mode == 1) {
-        echo "\n<BR>read 2007-12";
-        }
-
-    if ($mode == 1)
-      echo "\n<LI>";
-    else
-      echo ", ";
-    echo "<a href=http://en.wikipedia.org/wiki/The_Possibility_of_an_Island>The Possibility of an Island</a>";
-    echo " - Michel&nbsp;Houellebecq";
-    if ($mode == 1) {
-        echo "\n<BR>read 2007";
-        }
-    }
-
-function flicks($mode) {
-    echo "<a href=http://www.imdb.com/title/tt0414993/>The Fountain</a>";
-    if ($mode == 1) {
-        echo "\n<BR>DVD viewed 2007";
-        }
-    }
-
-function wtf($mode) {
-    if ($mode == 0) {
-        echo "<a href=mytake/#darkness>A 16</A>";
-        echo ", <a href=mytake/#darkness>Darkness</A>: ";
-        }
-    if ($mode == 1) {
-        echo "<LI><a href=http://www.yelp.com/biz/emmys-spaghetti-shack-san-francisco>Emmy</A><A
-            HREF=http://www.sfgate.com/cgi-bin/article.cgi?f=/c/a/2004/12/31/DDG6TAIQN11.DTL&type=food>'s</a>";
-        echo "<LI><a href=http://www.a16sf.com/>A&nbsp;16</a>";
-        echo "\n<BR>found 2008-05";
-        echo "<LI><a name=darkness>Darkness</A>: ";
-        echo "<a href=http://radio.darkness.com/>radiodarkness</a>";
-        echo ", <a href=http://darkness.com/>Darkness.com</a>";
-        echo ", <a href=http://darksites.com/links/Music/Music.html>Gothic&nbsp;Music</a>";
-        echo "\n<BR>found 2007";
-        }
-    }
 
 ?>
