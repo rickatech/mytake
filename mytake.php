@@ -35,7 +35,12 @@ class acat {
 				if (isset($v['ord']))
 					$o = $v['ord'];
 				ap($v);
-				$str = $o.', "'.$v['title']."\"\n";
+				$str  = $o;
+				$str .= ', "'.$v['aid'].'"';
+				$str .= ', "'.$v['title'].'|'.$v['date'].', '.$v['author'].'"';
+				$str .= ', "'.$v['pivot'].'"';
+				$str .= ', "'.$v['image'].'"';
+				$str .= "\n";
 			//	$str =  '<span id="'.$k.'">'.$v."</span>\n";
 				echo '<p>'.$str.'</p>';
 				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
