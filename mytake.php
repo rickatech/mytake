@@ -18,14 +18,37 @@ class acat {
 
 	static public $acat = NULL;
 
-	static public function get($file) {
-		acat::$acat = get_map($file);
+	static public function get($file, $tag = NULL, $art = NULL) {
+		//  sets public $acat property to result of catalog fetch
+		acat::$acat = get_map($file, $tag, $art);
+		//  FUTURE - refactor to pull in all records?  ...
+		//  then perform filter on in memory array (could be a memory pig)
+		}
+
+	static public function article($art = NULL) {
+		//  return  array of article attibutes, success
+		//          NULL if not found
+		global $dflags;
+		global $edit_url;
+		global $acat_data;
+	
+		if (!is_null($art) && $da = get_map($acat_data, NULL, $art)) {
+			$da_cap = explode('|', $da[0][2]);
+			$da_tag = explode('|', $da[0][3]);
+			return array(
+			  "article" => $art,
+			  "caption" => $da_cap,
+			  "tags" =>    $da_tag);
+			}
+		return NULL;
 		}
 
 	static public function write($file, $c) {
 		$result = false;
-		echo "write::".$file;
-		if ($fh = fopen($file, 'w')) {  //  if file does not exist it will be created
+		//  echo "write::".$file;
+//		if ($fh = fopen($file, 'w')) {  //  if file does not exist it will be created
+		if ($fh = fopen($file, 'a')) {  //  if file does not exist it will be created
+		//  Need a more refined write that places most recent toward file beginning :-/
 			//  FUTURE, check if returns false, try/catch?
 			$str =  "# ord, id_readable, ...\n";
 			fwrite($fh, $str);
@@ -34,7 +57,7 @@ class acat {
 				echo "\n<br>".$k.' / ';
 				if (isset($v['ord']))
 					$o = $v['ord'];
-				ap($v);
+	//			ap($v);
 				$str  = $o;
 				$str .= ', "'.$v['aid'].'"';
 				$str .= ', "'.$v['title'].'|'.$v['date'].', '.$v['author'].'"';
@@ -72,6 +95,7 @@ function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
 		$ua = is_null(session_userid_active()) ? false : true;
                 while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
 		    if ($data[CONTENT_ORD][0] != '#' && $data[CONTENT_ORD] != 'ID') {  //  skip past column titles row
+			//  FUTURE - $tag == 'ALL', goto addorw directly
 			$mu = false;
 			$mux = false;
 			if (!is_null($usr))
