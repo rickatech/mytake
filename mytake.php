@@ -12,6 +12,7 @@ const CONTENT_BYL = 2;  //  title | date, author
 const CONTENT_TAG = 3;
 const CONTENT_IMG = 4;
 const CONTENT_URL = 5;
+const CONTENT_HTG = 5;  //  hash tags
 
 class acat {
 	//  collection of tools for updating article catalog
