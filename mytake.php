@@ -14,6 +14,11 @@ const CONTENT_IMG = 4;
 const CONTENT_URL = 5;
 const CONTENT_HTG = 5;  //  hash tags
 
+const FOPEN_X_RETRIES = 3;
+
+const ACAT_NEW = 1;
+const ACAT_UPDATE = 2;
+
 class acat {
 	//  collection of tools for updating article catalog
 
@@ -42,6 +47,105 @@ class acat {
 			  "tags" =>    $da_tag);
 			}
 		return NULL;
+		}
+
+	static public function update($file, $cmd, $a) {
+		//  complete rewrite catalog with updated, added, dropped records
+		//  file    catalog filename, including full path  
+		//  cmd     NEW|UPDATE 
+		//  a       new/updated article record array
+		//  return  true, successful
+		//          false, failed/incomplete
+		//
+		//  create file exclusive lock on new catalog file, walk the old catalog
+		//  drop, update, add, keep rows as appropriate into the new file.
+		//  once new file is complete, close original,
+		//  Goal - oldest records (according to byline) should be at end of file
+		//  FUTURE - fseek may be able to help optimize this?
+		//  FUTURE - when database backend, this likely will less involved
+		//  check that lock is not present, open with lock new empty catalog file,
+		//  fopen($path, 'x', ...), errors if file exists alreadyi, which is fine, retry after delay
+		//  if blocked try three more attempts after micro random wait before declaring access error		
+		//  add -    place new/fresh record at beginning of file,
+		//           spin through origin catalog copying rows over
+		//  update - spin through origin catalog copying rows over,
+		//           update target record if it comes up (if not report no match, bail)
+		//  drop -   spin through origin catalog copying rows over,
+		//           omit target record if it comes up (if not report no match, bail)
+		//  close original, close new, rename original, rename new.
+		//  CITATION - http://www.hackingwithphp.com/8/11/0/locking-files-with-flock
+		//  http://stackoverflow.com/questions/13522273/will-flocked-file-be-unlocked-when-the-process-die-unexpectedly
+		$tries = 0;
+		$act_done = false;  //  set true when action for command is confirmed
+		$result = false;
+		echo '<br>acat::update';  ap($a);
+		while ($tries < FOPEN_X_RETRIES) {
+			if ($fh = fopen($file.'_lock', 'x'))  //  fails if file already exists
+				break;
+			sleep(rand(0,3));  //  sleep up to three seconds
+			$tries++;
+			}
+		if (!$fh) {
+			echo '<br>AFTER '.FOPEN_X_RETRIES;
+			echo ' retries, still could not get artc write lock, sorry';
+			return ($result);
+			}
+
+		/*  perform write processing here  */
+		$str =  "# ord, id_readable, ...\n";
+		fwrite($fh, $str);
+		$row = 0;
+		if ($fr = fopen($file, 'r')) {
+			$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
+			while (($data = fgetcsv($fr, 1000, ",")) !== FALSE) {
+				//  skip past column titles row
+				if ($data[CONTENT_ORD][0] != '#' && $data[CONTENT_ORD] != 'ID') {
+					ap($data);
+					if ($cmd == ACAT_UPDATE && $data[CONTENT_UID] == $a['aid']) {
+						$act_done = true;
+						if (isset($a['ord']))
+							$o = $a['ord'];
+						$str  = $o;
+						$str .= ', "'.$a['aid'].'"';
+						$str .= ', "'.$a['title'].'|'.$a['date'].', '.$a['author'].'"';
+						$str .= ', "'.$a['pivot'].'"';
+						$str .= ', "'.$a['image'].'"';
+						$str .= "\n";
+						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+						$o++;
+						}
+					else {
+						$i = 0;  $str = '';
+						foreach ($data as $k => $v) {
+							$str .= ($i < 1) ? $v : ', "'.$v.'"';
+							$i++;
+							}
+						$str .= "\n";
+						echo '<br> GOT HERE<br>'.$str;
+						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+						}
+					}
+				}
+			if ($fr) fclose($fr);
+			}
+		else
+			echo '<br>could not access acat';
+
+		if ($fh) fclose($fh);
+		if ($act_done)
+			rename($file, $file.'_0');
+//		if ($act_done && rename($file.'_lock', $file.'_done'))  /*  testing  */
+		if ($act_done && rename($file.'_lock', $file))
+			$result = true;
+		else {
+			unlink($file.'_lock');
+			//  FUTURE / SYSTEM - make system log
+			echo '<br>acat::update, could not complete action';
+			//  DANGER, if this file remains all updates are  blocked!!!
+			//  FUTURE - add routine check if lock file date is
+			//           older than a few minutes, then force delete
+			}
+		return $result;
 		}
 
 	static public function write($file, $c) {
