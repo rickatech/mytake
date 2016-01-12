@@ -78,7 +78,6 @@ class acat {
 		$tries = 0;
 		$act_done = false;  //  set true when action for command is confirmed
 		$result = false;
-		echo '<br>acat::update';  ap($a);
 		while ($tries < FOPEN_X_RETRIES) {
 			if ($fh = fopen($file.'_lock', 'x'))  //  fails if file already exists
 				break;
@@ -92,19 +91,36 @@ class acat {
 			}
 
 		/*  perform write processing here  */
+		$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
 		$str =  "# ord, id_readable, ...\n";
 		fwrite($fh, $str);
+
 		$row = 0;
+		if ($cmd == ACAT_NEW) {
+			$act_done = true;
+				if (isset($a['ord']))
+					$o = $a['ord'];
+				//  FUTURE - following code in a small utility function?
+				$str  = $o;
+				$str .= ', "'.$a['aid'].'"';
+				$str .= ', "'.$a['title'].'|'.$a['date'].', '.$a['author'].'"';
+				$str .= ', "'.$a['pivot'].'"';
+				$str .= ', "'.$a['image'].'"';
+				$str .= "\n";
+				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+				$o++;
+				$row++;
+			}
+
 		if ($fr = fopen($file, 'r')) {
-			$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
 			while (($data = fgetcsv($fr, 1000, ",")) !== FALSE) {
 				//  skip past column titles row
 				if ($data[CONTENT_ORD][0] != '#' && $data[CONTENT_ORD] != 'ID') {
-					ap($data);
 					if ($cmd == ACAT_UPDATE && $data[CONTENT_UID] == $a['aid']) {
 						$act_done = true;
 						if (isset($a['ord']))
 							$o = $a['ord'];
+						//  FUTURE - following code in a small utility function?
 						$str  = $o;
 						$str .= ', "'.$a['aid'].'"';
 						$str .= ', "'.$a['title'].'|'.$a['date'].', '.$a['author'].'"';
@@ -121,10 +137,10 @@ class acat {
 							$i++;
 							}
 						$str .= "\n";
-						echo '<br> GOT HERE<br>'.$str;
 						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
 						}
 					}
+				$row++;
 				}
 			if ($fr) fclose($fr);
 			}
