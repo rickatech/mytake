@@ -14,8 +14,6 @@ const CONTENT_IMG = 4;
 const CONTENT_URL = 5;
 const CONTENT_HTG = 5;  //  hash tags
 
-const FOPEN_X_RETRIES = 3;
-
 const ACAT_NEW = 1;
 const ACAT_UPDATE = 2;
 
