@@ -196,6 +196,59 @@ class acat {
 
 	}  //  acat [end]
 
+const ECAT_ORD =    0;
+const ECAT_UID =    1;
+const ECAT_TITLE =  2;
+const ECAT_DATE=    3;
+const ECAT_AUTHOR = 4;
+const ECAT_IMG=     5;
+const ECAT_ARTID =  6;  //  related article
+const ECAT_HTG =    7;  //  hash tags
+const ECAT_RES1 =   8;  //  pivot tags?
+const ECAT_RES2 =   9;  //  external URL?
+
+class ecat {
+	//  collection of tools for updating exchange catalog
+
+	function get($file, $autr = NULL, $exch = NULL) {
+		//  autr    array of authors (primary)
+		//          NULL, all authors
+		//  exch    array of exchange ID (secondary)
+		//          NULL, don't limit exchange ID's
+		//  return  array containing exchange catalog
+		//          NULL if nothing found
+		//  related: get_map()
+			//  tag     tag to match, NULL match all tags
+			//          ignore elements matching 'ondeck' unless specifcally passed
+			//  art     article ID to match, NULL match all article ID's
+			//        if both art and tag are passed, tag will be ignored
+			//  usr     only` show content authored by specific user
+			//  flg     FUTURE: omit ondeck, filter by content type
+			//  FUTURE: all multiple tags, article ID's to be passed in
+
+	        $row = 0;
+		$cat = array();
+	        if ($fh = fopen($file, 'r')) {
+	                while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
+				if ($data[CONTENT_ORD][0] != '#') {  //  skip past column titles row
+					$m = true;
+					if ($m) {
+		                                $cat[$row] = $data;
+						$row++;
+						}
+		                        }
+				}
+			fclose($fh);
+			return ($new_map);
+			}
+	        else {
+			echo "<p>fopen read error".$file." </p> \n\n";  //  FUTURE, make a log file entry for this?
+			return (NULL);
+			}
+		}
+
+	}  //  ecat [end]
+
 //  FUTURE - following can be rolled into a static class (see above)
 
 function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
