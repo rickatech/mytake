@@ -320,10 +320,11 @@ function get_map($filename, $tag = NULL, $art = NULL, $usr = NULL) {
                         }
 		    }
                 fclose($fh);
-                return ($new_map);
+                return (isset($new_map) ? $new_map : NULL);
                 }
         else {
                 echo "<p>fopen read error </p> \n\n";  //  FUTURE, make a log file entry for this?
+		system_log('get_map, fopen error - '.$filename);
                 return (NULL);
                 }
         }
