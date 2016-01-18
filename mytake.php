@@ -210,6 +210,8 @@ const ECAT_RES2 =   9;  //  external URL?
 class ecat {
 	//  collection of tools for updating exchange catalog
 
+	static public $ecat = NULL;
+
 	function get($file, $autr = NULL, $exch = NULL) {
 		//  autr    array of authors (primary)
 		//          NULL, all authors
