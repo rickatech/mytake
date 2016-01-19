@@ -84,7 +84,7 @@ class acat {
 			}
 		if (!$fh) {
 			echo '<br>AFTER '.FOPEN_X_RETRIES;
-			echo ' retries, still could not get artc write lock, sorry';
+			echo ' retries, still could not get acat write lock, sorry';
 			return ($result);
 			}
 
@@ -258,6 +258,106 @@ class ecat {
 			echo "<p>fopen read error".$file." </p> \n\n";  //  FUTURE, make a log file entry for this?
 			return (NULL);
 			}
+		}
+
+	static public function update($file, $cmd, $a) {
+		//  complete rewrite catalog with updated, added, dropped records
+		//  file    catalog filename, including full path  
+		//  cmd     NEW|UPDATE 
+		//  a       new/updated article record array
+		//  return  true, successful
+		//          false, failed/incomplete
+		//  Initial code lifted from acat::update().
+		$tries = 0;
+		$act_done = false;  //  set true when action for command is confirmed
+		$result = false;
+		while ($tries < FOPEN_X_RETRIES) {
+			if ($fh = fopen($file.'_lock', 'x'))  //  fails if file already exists
+				break;
+			sleep(rand(0,3));  //  sleep up to three seconds
+			$tries++;
+			}
+		if (!$fh) {
+			echo '<br>AFTER '.FOPEN_X_RETRIES;
+			echo ' retries, still could not get ecat write lock, sorry';
+			return ($result);
+			}
+
+		/*  perform write processing here  */
+		$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
+		$str =  "# ord, id_readable, ...\n";
+		fwrite($fh, $str);
+
+		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
+if (0) {	//  test test
+		$row = 0;
+		if ($cmd == ACAT_NEW) {
+			$act_done = true;
+				if (isset($a['ord']))
+					$o = $a['ord'];
+				//  FUTURE - following code in a small utility function?
+				$str  = $o;
+				$str .= ', "'.$a['aid'].'"';
+				$str .= ', "'.$a['title'].'|'.$a['date'].', '.$a['author'].'"';
+				$str .= ', "'.$a['pivot'].'"';
+				$str .= ', "'.$a['image'].'"';
+				$str .= "\n";
+				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+				$o++;
+				$row++;
+			}
+
+		if ($fr = fopen($file, 'r')) {
+			while (($data = fgetcsv($fr, 1000, ",")) !== FALSE) {
+				//  skip past column titles row
+				if ($data[CONTENT_ORD][0] != '#' && $data[CONTENT_ORD] != 'ID') {
+					if ($cmd == ACAT_UPDATE && $data[CONTENT_UID] == $a['aid']) {
+						$act_done = true;
+						if (isset($a['ord']))
+							$o = $a['ord'];
+						//  FUTURE - following code in a small utility function?
+						$str  = $o;
+						$str .= ', "'.$a['aid'].'"';
+						$str .= ', "'.$a['title'].'|'.$a['date'].', '.$a['author'].'"';
+						$str .= ', "'.$a['pivot'].'"';
+						$str .= ', "'.$a['image'].'"';
+						$str .= "\n";
+						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+						$o++;
+						}
+					else {
+						$i = 0;  $str = '';
+						foreach ($data as $k => $v) {
+							$str .= ($i < 1) ? $v : ', "'.$v.'"';
+							$i++;
+							}
+						$str .= "\n";
+						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+						}
+					}
+				$row++;
+				}
+			if ($fr) fclose($fr);
+			}
+		else
+			echo '<br>could not access ecat';
+
+	}  //  testtest
+		if ($fh) fclose($fh);
+//		if ($act_done)
+//			rename($file, $file.'_0');
+		if ($act_done && rename($file.'_lock', $file.'_done'))  /*  testing  */
+//		if ($act_done && rename($file.'_lock', $file))
+			$result = true;
+		else {
+			unlink($file.'_lock');
+			//  FUTURE / SYSTEM - make system log
+			echo '<br>ecat::update, could not complete action ';
+			//  DANGER, if this file remains all updates are  blocked!!!
+			//  FUTURE - add routine check if lock file date is
+			//           older than a few minutes, then force delete
+			}
+		return $result;
 		}
 
 	}  //  ecat [end]
