@@ -212,10 +212,18 @@ class ecat {
 
 	static public $ecat = NULL;
 
-	function get($file, $autr = NULL, $exch = NULL) {
+	static public function get2($file, $tag = NULL, $eid = NULL) {
+		//  sets public $ecat property to result of catalog fetch
+		ecat::$ecat = ecat::get($file, $tag, $eid);
+		//  FUTURE - refactor to pull in all records?  ...
+		//  then perform filter on in memory array (could be a memory pig)
+		}
+
+	function get($file, $autr = NULL, $eid = NULL) {
 		//  autr    array of authors (primary)
 		//          NULL, all authors
-		//  exch    array of exchange ID (secondary)
+		//  eid     single eid to match (secondary)
+		//          FUTURE - array of exchange ID (secondary)
 		//          NULL, don't limit exchange ID's
 		//  return  array containing exchange catalog
 		//          NULL if nothing found
@@ -232,8 +240,11 @@ class ecat {
 		$cat = array();
 	        if ($fh = fopen($file, 'r')) {
 	                while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
-				if ($data[CONTENT_ORD][0] != '#') {  //  skip past column titles row
-					$m = true;
+				if ($data[ECAT_ORD][0] != '#') {  //  skip past column titles row
+					if ($eid)
+						$m = ($eid == $data[ECAT_UID]) ? true : false;
+					else
+						$m = true;
 					if ($m) {
 		                                $cat[$row] = $data;
 						$row++;
@@ -241,7 +252,7 @@ class ecat {
 		                        }
 				}
 			fclose($fh);
-			return ($new_map);
+                	return (isset($cat) ? $cat : NULL);
 			}
 	        else {
 			echo "<p>fopen read error".$file." </p> \n\n";  //  FUTURE, make a log file entry for this?
