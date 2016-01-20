@@ -207,6 +207,9 @@ const ECAT_HTG =    7;  //  hash tags
 const ECAT_RES1 =   8;  //  pivot tags?
 const ECAT_RES2 =   9;  //  external URL?
 
+const ECAT_NEW = 1;
+const ECAT_UPDATE = 2;
+
 class ecat {
 	//  collection of tools for updating exchange catalog
 
@@ -285,22 +288,26 @@ class ecat {
 
 		/*  perform write processing here  */
 		$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
-		$str =  "# ord, id_readable, ...\n";
+		$str =  "# ord, id_readable, title, date, author, image, artid, htags\n";
 		fwrite($fh, $str);
 
 		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
-if (0) {	//  test test
+		ap($a);
+if (1) {	//  test test
 		$row = 0;
-		if ($cmd == ACAT_NEW) {
+		if ($cmd == ECAT_NEW) {
 			$act_done = true;
 				if (isset($a['ord']))
 					$o = $a['ord'];
 				//  FUTURE - following code in a small utility function?
 				$str  = $o;
-				$str .= ', "'.$a['aid'].'"';
-				$str .= ', "'.$a['title'].'|'.$a['date'].', '.$a['author'].'"';
-				$str .= ', "'.$a['pivot'].'"';
-				$str .= ', "'.$a['image'].'"';
+				$str .= ', "'.$a['eid'].'"';
+				$str .= ', "'.$a['title'].'"';
+				$str .= ', "'.$a['date'].'"';
+				$str .= ', "'.$a['author'].'"';
+				$str .= ', "stock"';
+				//  $str .= ', ".$a['ECAT_ARTID'].'"';
+				//  $str .= ', ".$a['ECAT_HTG'].'"';
 				$str .= "\n";
 				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
 				$o++;
@@ -310,17 +317,20 @@ if (0) {	//  test test
 		if ($fr = fopen($file, 'r')) {
 			while (($data = fgetcsv($fr, 1000, ",")) !== FALSE) {
 				//  skip past column titles row
-				if ($data[CONTENT_ORD][0] != '#' && $data[CONTENT_ORD] != 'ID') {
-					if ($cmd == ACAT_UPDATE && $data[CONTENT_UID] == $a['aid']) {
+				if ($data[ECAT_ORD][0] != '#') {
+					if ($cmd == ECAT_UPDATE && $data[ECAT_UID] == $a['eid']) {
 						$act_done = true;
 						if (isset($a['ord']))
 							$o = $a['ord'];
 						//  FUTURE - following code in a small utility function?
 						$str  = $o;
-						$str .= ', "'.$a['aid'].'"';
-						$str .= ', "'.$a['title'].'|'.$a['date'].', '.$a['author'].'"';
-						$str .= ', "'.$a['pivot'].'"';
-						$str .= ', "'.$a['image'].'"';
+						$str .= ', "'.$a['eid'].'"';
+						$str .= ', "'.$a['title'].'"';
+						$str .= ', "'.$a['date'].'"';
+						$str .= ', "'.$a['author'].'"';
+						$str .= ', "stock"';
+						//  $str .= ', ".$a['ECAT_ARTID'].'"';
+						//  $str .= ', ".$a['ECAT_HTG'].'"';
 						$str .= "\n";
 						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
 						$o++;
@@ -344,10 +354,10 @@ if (0) {	//  test test
 
 	}  //  testtest
 		if ($fh) fclose($fh);
-//		if ($act_done)
-//			rename($file, $file.'_0');
-		if ($act_done && rename($file.'_lock', $file.'_done'))  /*  testing  */
-//		if ($act_done && rename($file.'_lock', $file))
+		if ($act_done)
+			rename($file, $file.'_0');
+//		if ($act_done && rename($file.'_lock', $file.'_done'))  /*  testing  */
+		if ($act_done && rename($file.'_lock', $file))
 			$result = true;
 		else {
 			unlink($file.'_lock');
