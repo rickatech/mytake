@@ -215,6 +215,32 @@ class ecat {
 
 	static public $ecat = NULL;
 
+	static public function seq_next($dir, $uid) {
+		//  dir     directory path for sequence file and content file
+		//          FUTURE - fopen(x) to open content file, if it exists then do 
+		//                   catalog search to find first open sequence number that is free
+		//  uid     author or prefix, content filename example: [uid]_0001
+		//  return  sequence number to use > 0
+		//          false, could not confirm sequence number to use
+		//  CITATION http://stackoverflow.com/questions/22409780/flock-vs-lockf-on-linux
+		$result = false;
+		$file_seq = $dir.'/'.$uid.'_seq';
+		echo '<br>file_seq: '.$file_seq;
+		if ($fs = fopen($file_seq, 'r')) {
+			$seq_d = fgetcsv($fs, 1000, ",");
+			ap($seq_d);
+			fclose($fs);
+			}
+		$seq = isset($seq_d[0]) ? $seq_d[0] : 1;
+		//  FUTURE - call fopen(x) file content test
+		if (($fs = fopen($file_seq, 'w')) && (fwrite($fs, ($seq + 1)."\n") !== false)) {
+			if ((fwrite($fs, ($seq + 1)."\n") !== false))
+				$result = $seq;
+			fclose($fs);
+			}
+		return ($result);  //  could not write exchange seq file: $file_seq
+		}
+
 	static public function get2($file, $tag = NULL, $eid = NULL) {
 		//  sets public $ecat property to result of catalog fetch
 		ecat::$ecat = ecat::get($file, $tag, $eid);
