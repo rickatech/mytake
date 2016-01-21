@@ -296,7 +296,10 @@ class ecat {
 if (1) {	//  test test
 		$row = 0;
 		if ($cmd == ECAT_NEW) {
-			$act_done = true;
+				//  FUTURE - it is possible that this uid file already exists
+				//           could do a fopen(x) and if it fails then bail with error
+				//           saying new file would overwrite existing content
+				$act_done = true;
 				if (isset($a['ord']))
 					$o = $a['ord'];
 				//  FUTURE - following code in a small utility function?
@@ -306,7 +309,7 @@ if (1) {	//  test test
 				$str .= ', "'.$a['date'].'"';
 				$str .= ', "'.$a['author'].'"';
 				$str .= ', "stock"';
-				//  $str .= ', ".$a['ECAT_ARTID'].'"';
+				$str .= ', "'.$a['artid'].'"';
 				//  $str .= ', ".$a['ECAT_HTG'].'"';
 				$str .= "\n";
 				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
@@ -329,7 +332,7 @@ if (1) {	//  test test
 						$str .= ', "'.$a['date'].'"';
 						$str .= ', "'.$a['author'].'"';
 						$str .= ', "stock"';
-						//  $str .= ', ".$a['ECAT_ARTID'].'"';
+						$str .= ', "'.$a['artid'].'"';
 						//  $str .= ', ".$a['ECAT_HTG'].'"';
 						$str .= "\n";
 						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
