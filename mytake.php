@@ -215,7 +215,12 @@ class ecat {
 
 	static public $ecat = NULL;
 
+	static public function seq_find($cat, $uid, $offset) {
+		//  FUTURE - make this generic, for any class of content catalog
+		}
+
 	static public function seq_next($dir, $uid) {
+		//  FUTURE - make this generic, for any class of content file
 		//  dir     directory path for sequence file and content file
 		//          FUTURE - fopen(x) to open content file, if it exists then do 
 		//                   catalog search to find first open sequence number that is free
@@ -225,25 +230,26 @@ class ecat {
 		//  CITATION http://stackoverflow.com/questions/22409780/flock-vs-lockf-on-linux
 		$result = false;
 		$file_seq = $dir.'/'.$uid.'_seq';
-		echo '<br>file_seq: '.$file_seq;
 		if ($fs = fopen($file_seq, 'r')) {
 			$seq_d = fgetcsv($fs, 1000, ",");
 			ap($seq_d);
 			fclose($fs);
 			}
 		$seq = isset($seq_d[0]) ? $seq_d[0] : 1;
+		echo '<br>file_seq: '.$file_seq.' / '.$seq.' - ';
 		//  FUTURE - call fopen(x) file content test
-		if (($fs = fopen($file_seq, 'w')) && (fwrite($fs, ($seq + 1)."\n") !== false)) {
+		if ($fs = fopen($file_seq, 'w')) {
 			if ((fwrite($fs, ($seq + 1)."\n") !== false))
 				$result = $seq;
 			fclose($fs);
 			}
+		echo '<br>file_seq: '.$file_seq.' / '.$result.' - ';
 		return ($result);  //  could not write exchange seq file: $file_seq
 		}
 
 	static public function get2($file, $tag = NULL, $eid = NULL) {
 		//  sets public $ecat property to result of catalog fetch
-		ecat::$ecat = ecat::get($file, $tag, $eid);
+		self::$ecat = self::get($file, $tag, $eid);
 		//  FUTURE - refactor to pull in all records?  ...
 		//  then perform filter on in memory array (could be a memory pig)
 		}
@@ -272,6 +278,9 @@ class ecat {
 				if ($data[ECAT_ORD][0] != '#') {  //  skip past column titles row
 					if ($eid)
 						$m = ($eid == $data[ECAT_UID]) ? true : false;
+					else if ($autr) {  //  limit to only authors contained in list
+						$m = in_array($data[ECAT_AUTHOR], $autr) ? true : false;
+						}
 					else
 						$m = true;
 					if ($m) {
