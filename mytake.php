@@ -9,6 +9,10 @@ function ap($a) {
 const CONTENT_ORD = 0;  //  ...
 const CONTENT_UID = 1;
 const CONTENT_BYL = 2;  //  title | date, author
+const CONTENT_BYL_T = 0;      //  title
+const CONTENT_BYL_DA = 1;     //  date, author
+const CONTENT_BYL_DA_DT = 0;  //  date
+const CONTENT_BYL_DA_AU = 1;  //  author
 const CONTENT_TAG = 3;
 const CONTENT_IMG = 4;
 const CONTENT_URL = 5;
