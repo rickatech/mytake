@@ -36,9 +36,10 @@ function head_body($class = NULL, $pos = NULL) {
 		echo "\n<div id=\"login_up\" style=\"position: absolute; right: 0px; top: 0; margin: 4px; text-align: right;\">".$login_form."</div>";
 		//  position brand and login above inside, top of main body div
         	echo "<div style=\"float: right; text-align: right; padding-right: 3px; padding-top: 1px;\">";
-        	echo "<span>OLD</span>";
-		if ($debug_mask & 1)
-			echo "\n<span>".$notes."</span> <span id='mt_msg'></span>";
+		if ($debug_mask & 1) {
+			echo "\n<div style=\"position: absolute; top: 0; left: 288px; margin-top: 4px;\">";
+			echo $notes." <span id='mt_msg'></span></div>";
+			}
 	        echo "</div>";
         	echo "\n<div style=\"padding-top: 8px; padding-left: 4px;\">".$h0.$brand_l.$h1."</div>";
 		}

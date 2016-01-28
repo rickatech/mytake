@@ -5,7 +5,7 @@ function window_adjust() {
 	var dwin_x = wox - wix;
 	var sx = window.screen.width;
 	var sy = window.screen.height;
-	notes = dflags + ', ' + wox + '|' + wix + ', ' + dwin_x + ', ' + sx + '/' + sy;
+	notes = dflags + ', ' + wox + '|' + wix + ', ' + dwin_x + ', ' + window.outerHeight + '|' + window.innerHeight + ', ' + sx + '/' + sy;
 	if (!(dflags)) {  //  i.e. if desktop
 		//  dwin.style.width requires parseFloat() to return pure numerical,
 		//  and likely isn't set in DOM initially
