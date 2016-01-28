@@ -28,7 +28,7 @@ function head_body($class = NULL, $pos = NULL) {
 		}
 	echo "\n<div".$dc." id='main_div'";
         if (!$dflags & DFLAGS_MOBILE) {  // i.e. not mobile
-		echo "\n  style=\"position: relative; width: 1024px; background: #FFFFFF; border: solid; margin: auto;\">";
+		echo "\n  style=\"position: relative; width: ".DESK_WIDTH_MIN."; background: #FFFFFF; border: solid; margin: auto;\">";
         } else {
 		echo "\n  style=\"position: relative; background: #FFFFFF; border: solid;\">";
         	}

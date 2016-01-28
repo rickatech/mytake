@@ -6,13 +6,15 @@ function window_adjust() {
 	var sx = window.screen.width;
 	var sy = window.screen.height;
 	notes = dflags + ', ' + wox + '|' + wix + ', ' + dwin_x + ', ' + window.outerHeight + '|' + window.innerHeight + ', ' + sx + '/' + sy;
-	if (!(dflags)) {  //  i.e. if desktop
+	if (!(dflags) && desk_width_max > 0) {  //  i.e. if desktop
 		//  dwin.style.width requires parseFloat() to return pure numerical,
 		//  and likely isn't set in DOM initially
-		if (wix > desk_width)
-			dwin.style.width = (wix - xm) + 'px';
+		if (wix > (desk_width_max + desk_width_pad))
+			dwin.style.width = desk_width_max + 'px';
+		else if (wix > (desk_width + desk_width_pad))
+			dwin.style.width = wix - desk_width_pad + 'px';
 		else
-			dwin.style.width = (desk_width - xm) + 'px';
+			dwin.style.width = desk_width + 'px';
 		}
 	if (debug_mask & 1)
 		document.getElementById('mt_msg').innerHTML = notes;
