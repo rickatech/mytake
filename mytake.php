@@ -6,6 +6,38 @@ function ap($a) {
 	echo "</pre>";
 	}
 
+class mt_lock {
+	//  lofi file based locking, suitable for use with shared nfs style storage
+	//  assumes write lock order can be arbitrary
+	//  FUTURE - consider making get and drop non-static, requiring object creation
+
+	static public function get($file, &$fh) {
+		//  get/open write lock - creates lock file
+		$success = false;
+		return $success;
+		}
+
+	static public function drop($file, &$fh) {
+		//  close/write lock - removes lock file,
+		//  can also be used to purge ancient/corrupt write lock file?
+		}
+
+	static public function check($file) {
+		//  detect write lock - typically called preceding read action
+		//  FUTURE - there is a tiny chance this check will return
+		//  okay (no write lock), pause another process activtes,
+		//  performs write lock, starts to wrap up with drop call,
+		//  then that process stalls, original read process resumes,
+		//  but the previous drop's 2nd rename hasn't occured yet
+		//  so there is no file to open.  But there should be a file_0
+		//  if this is not a new file
+		//  if so sleep breifly, then try again until max retries 
+		$success = false;
+		return $success;
+		}
+
+	}
+	
 const CONTENT_ORD = 0;  //  ...
 const CONTENT_UID = 1;
 const CONTENT_BYL = 2;  //  title | date, author
