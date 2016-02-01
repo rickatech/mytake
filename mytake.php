@@ -268,18 +268,18 @@ class ecat {
 		$file_seq = $dir.'/'.$uid.'_seq';
 		if ($fs = fopen($file_seq, 'r')) {
 			$seq_d = fgetcsv($fs, 1000, ",");
-			ap($seq_d);
+//			ap($seq_d);
 			fclose($fs);
 			}
 		$seq = isset($seq_d[0]) ? $seq_d[0] : 1;
-		echo '<br>file_seq: '.$file_seq.' / '.$seq.' - ';
+//		echo '<br>file_seq: '.$file_seq.' / '.$seq.' - ';
 		//  FUTURE - call fopen(x) file content test
 		if ($fs = fopen($file_seq, 'w')) {
 			if ((fwrite($fs, ($seq + 1)."\n") !== false))
 				$result = $seq;
 			fclose($fs);
 			}
-		echo '<br>file_seq: '.$file_seq.' / '.$result.' - ';
+//		echo '<br>file_seq: '.$file_seq.' / '.$result.' - ';
 		return ($result);  //  could not write exchange seq file: $file_seq
 		}
 
@@ -362,8 +362,8 @@ class ecat {
 		$str =  "# ord, id_readable, title, date, author, image, artid, htags\n";
 		fwrite($fh, $str);
 
-		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
-		ap($a);
+//		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
+//		ap($a);
 if (1) {	//  test test
 		$row = 0;
 		if ($cmd == ECAT_NEW) {
