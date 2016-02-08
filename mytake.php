@@ -402,7 +402,8 @@ if (1) {	//  test test
 						$str .= ', "'.$a['title'].'"';
 						$str .= ', "'.$a['date'].'"';
 						$str .= ', "'.$a['author'].'"';
-						$str .= ', "stock"';
+						$str .= ', "'.$a['image'].'"';
+					//	$str .= ', "stock"';
 						$str .= ', "'.$a['artid'].'"';
 						//  $str .= ', ".$a['ECAT_HTG'].'"';
 						$str .= "\n";
