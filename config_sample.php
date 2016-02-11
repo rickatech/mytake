@@ -8,7 +8,7 @@ $login_data = '/profiles_dev.txt';
 $catalog_data = $data_dir.'/data_cp';
 
 $menu_mark = 'MENU';
-$menu_full = 'pivot | go | dashboard | providers | search';
+$foot = 'about | join | promotions | careers';
 
 $brand_t = "rickatech - MyTake";
 $brand_l = "<b>My Take</b>";

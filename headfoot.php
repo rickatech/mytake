@@ -21,8 +21,6 @@ function head_body($class = NULL, $pos = NULL) {
 		echo "\n<div id=\"login_up\" style=\"position: absolute; right: 0px; top: 0; text-align: right;\">TEST</div>";
 		//  position brand and login above / outside of main body div
 		echo "<div style=\"float: right; text-align: right;\"><span>".$login_form."</span>";
-		if ($debug_mask & 1)
-	        	echo "\n<span>".$notes."</span> <span id='mt_msg'></span>";
 	        echo "</div>";
 	        echo "\n".$h0.$brand_l.$h1;
 		}
@@ -35,12 +33,6 @@ function head_body($class = NULL, $pos = NULL) {
 	if ($pos) {  //  FUTURE - some of below should be a shared function?
 		echo "\n<div id=\"login_up\" style=\"position: absolute; right: 0px; top: 0; margin: 4px; text-align: right;\">".$login_form."</div>";
 		//  position brand and login above inside, top of main body div
-        	echo "<div style=\"float: right; text-align: right; padding-right: 3px; padding-top: 1px;\">";
-		if ($debug_mask & 1) {
-			echo "\n<div style=\"position: absolute; top: 0; left: 288px; margin-top: 4px;\">";
-			echo $notes." <span id='mt_msg'></span></div>";
-			}
-	        echo "</div>";
         	echo "\n<div style=\"padding-top: 8px; padding-left: 4px;\">".$h0.$brand_l.$h1."</div>";
 		}
 	}
@@ -60,6 +52,10 @@ function body_lowright () {
 	}	
 
 function foot() {
-	echo "<div style=\"text-align: center; font-family: sans-serif;\"><br>about | join | promotions | careers</div>"; 
+	global $foot, $notes, $debug_mask;
+
+	echo "<div style=\"text-align: center; font-family: sans-serif;\"><br>".$foot.'</div>'; 
+	if ($debug_mask & DEBUG_DISPSIZE)
+		echo "\n<div style=\"position: fixed; bottom: 0; right: 0; background-color: white; text-align: right; font-size: smaller;\">".$notes."<span id='mt_msg'></span></div>";
 	}
 ?>
