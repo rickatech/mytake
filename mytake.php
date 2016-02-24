@@ -6,6 +6,50 @@ function ap($a) {
 	echo "</pre>";
 	}
 
+function seq_next_free($cat, $un, $offset) {
+	//  Scan generic catalog, find next free sequence number for username_seq id
+	//  cat     file path to catalog to search
+	//  un	    username to search for
+	//  offset  field offset to hunt for username_seq
+	//  return  n, next used sequence number
+	//          1 (if no preexisting record found)
+	//          false, unrecoverable error
+	$result = false;
+	if ($fh = fopen($cat, 'r')) {
+		//  fgetcsv more actively preserves contents within double quotes :-)
+		$r_max = 0;
+		$r_min = 0;
+		while (($data = fgetcsv($fh, 1000)) !== FALSE) {
+			$un_s = sprintf('%s_%04d', $un, $r);
+			//  for each match un_nnnn
+			//    - determine the nnnn offset
+			//      if min not set, make min v
+			//      if max not set, make max v
+			//      if min set, if v < min, min = v
+			//      if max set, if v > max, man = v
+			//      after scan if lowest > 1 then seq = low - 1, otherwise seq = high + 1
+			//      FUTURE - there still could be gaps, but at least no collision
+			if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
+				$list = array_map('trim', $data);
+				$e = explode("_", $data[$offset]);
+				if ($un == $e[0]) {
+					//  only search uid records that include current active username
+					if ($e[1] > 0) {
+						if ($r_max == 0) $r_max = $e[1];
+						else if ($r_max < $e[1]) $r_max = $e[1];
+						if ($r_min == 0) $r_min = $e[1];
+						else if ($r_min > $e[1]) $r_min = $e[1];
+						}
+					}
+				}
+			}
+		if ($r_min > 1)	
+			$result = $r_min - 1;
+		else $result = $r_max + 1;  //  if no records this becomes 1
+		}
+	return ($result);
+	}
+
 class mt_lock {
 	//  lofi file based locking, suitable for use with shared nfs style storage
 	//  assumes write lock order can be arbitrary
@@ -13,13 +57,32 @@ class mt_lock {
 
 	static public function get($file, &$fh) {
 		//  get/open write lock - creates lock file
-		$success = false;
-		return $success;
+		//  file    base filename to lock
+		//  fh      pointer to lock file handle (unset initially)
+		//  return  true, fh has been set to lock file handle
+		//          false, could not obtain lock,
+		//          spit out error to console, FUTURE syslog?
+		$tries = 0;
+		while ($tries < FOPEN_X_RETRIES) {
+			if ($fh = fopen($file.'_lock', 'x'))  //  fails if file already exists
+				break;
+			sleep(rand(0,3));  //  sleep up to three seconds
+			$tries++;
+			}
+		if ($fh)
+			$result = true;
+		else {
+			$result = false;
+			echo '<br>AFTER '.FOPEN_X_RETRIES;
+			echo ' retries, still could not get '.$file.' write lock, sorry';
+			}
+		return ($result);
 		}
 
-	static public function drop($file, &$fh) {
+	static public function drop(&$fh) {
 		//  close/write lock - removes lock file,
 		//  can also be used to purge ancient/corrupt write lock file?
+		if ($fh) fclose($fh);
 		}
 
 	static public function check($file) {
@@ -250,10 +313,6 @@ class ecat {
 	//  collection of tools for updating exchange catalog
 
 	static public $ecat = NULL;
-
-	static public function seq_find($cat, $uid, $offset) {
-		//  FUTURE - make this generic, for any class of content catalog
-		}
 
 	static public function seq_next($dir, $uid) {
 		//  FUTURE - make this generic, for any class of content file
