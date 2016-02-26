@@ -79,7 +79,7 @@ class mt_lock {
 		return ($result);
 		}
 
-	static public function drop(&$fh) {
+	static public function release(&$fh) {
 		//  close/write lock - removes lock file,
 		//  can also be used to purge ancient/corrupt write lock file?
 		if ($fh) fclose($fh);
