@@ -168,7 +168,7 @@ function login_state(&$out, $hint = NULL) {
 				$out .= "<br>".$menu_mark;
 			$out .= "<br><a href=\"javascript:head_logout();\">logout</a>";
 			$out .= "\n</form>";
-			$out .= '<img src=/gfx/avatar_'.$_SESSION['username_dg'].'_min.gif style="margin-left: 4px;">';
+			$out .= '<a href="javascript:head_profile();"><img src=/gfx/avatar_'.$_SESSION['username_dg'].'_min.gif style="margin-left: 4px;"></a>';
 			}
 		return (1);
 		}
