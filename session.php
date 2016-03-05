@@ -122,7 +122,7 @@ function login_state(&$out, $hint = NULL) {
 	global $feature_mask;
 	global $cookie_expire;
 	global $cookie_url;
-	global $menu_mark, $menu_full;
+	global $menu_helo, $menu_mark, $menu_full;
 
 	/*  Assumes a form with name=login, type=post is being used.  */
 	/*    hint    adjust formatting/presentation of login form
@@ -161,7 +161,8 @@ function login_state(&$out, $hint = NULL) {
 			}
 		else {
 			if ($feature_mask & FEATURE_PROFILE)
-				$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg'].'</a>';
+				$out .= ' '.(isset($menu_helo) ? $menu_helo : '').'<a href="javascript:head_profile();">'.$_SESSION['username_dg'].'</a>';
+			//	$out .= " <a href=\"javascript:head_profile();\">".$_SESSION['username_dg'].'</a>';
 			else
 				$out .= $_SESSION['username_dg']." ";
 			if (isset($menu_mark))  //  if no menu string defined, conserve space and skip new line
@@ -190,7 +191,7 @@ function login_state(&$out, $hint = NULL) {
 		}
 
 	/*  !!!  $dflags & DFLAGS_MOBILE  */
-	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0; padding: 0; display: inline-block; vertical-align: top; background-color: pink\">";
+	$out  = "\n<form method=\"POST\" action=\"\" name=\"login\" style=\"margin: 0; padding: 0; display: inline-block; vertical-align: top;\">";
 	//  $out  = ... background-color: yellow;\">";
 
 	$out .= "<span id=\"login_lab\"";
@@ -230,6 +231,8 @@ function login_state(&$out, $hint = NULL) {
 //	$out .= "<div id=\"login_key\" style=\"display: inline-block;\"><a onClick=\"login_fields_toggle();\"><img0 src=/gfx/login_55x.png style=\"margin-left: 4px;\"></a></div>";
 
 	$out .= "\n</form>";
+	if (is_null($hint))
+		$out .= '<img src=/gfx-stock/avatar_nologin_min.png style="margin-left: 4px;">';
 	return (0);
 	}
 

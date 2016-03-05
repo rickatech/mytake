@@ -8,6 +8,7 @@ $login_data = '/profiles_dev.txt';
 $catalog_data = $data_dir.'/data_cp';
 
 $menu_mark = 'MENU';
+$menu_helo = 'Hello ';  //  okay for this to be commented out/unset to skip
 $foot = 'about | join | promotions | careers';
 
 $brand_t = "rickatech - MyTake";
