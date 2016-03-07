@@ -16,6 +16,11 @@ function window_adjust() {
 		else
 			dwin.style.width = desk_width + 'px';
 		}
+//	if (document.getElementById('slider1_container')) {
+//		//  FUTURE - at some point, enable slider responsive code here
+//		//  jssor_slider1.$ScaleWidth(window_adjust_o());
+//		//  CITATION: http://www.howtolabs.net/web/jssor/responsive/
+//		}
 	if (debug_mask & 1)
 		document.getElementById('mt_msg').innerHTML = notes;
 	}
