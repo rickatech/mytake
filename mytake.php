@@ -124,8 +124,8 @@ class lists {
 		//  $file    file to open - can be friends or invites
 		//  $fr      array, upon return contains list of friends
 		//  if error, ...
-		echo "\n<br>keyed_lists::put:";
-		ap($fr);
+//		echo "\n<br>keyed_lists::put:";
+//		ap($fr);
 		$result = false;
 		file_log($file);  //  why can't this be done after fopen?
 		if ($fh = fopen($file, 'w')) {
