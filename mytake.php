@@ -6,6 +6,17 @@ function ap($a) {
 	echo "</pre>";
 	}
 
+function file_log($file) {
+	//  append log file with date stamp, followed by current active
+	//  file contents (in case a revert is needed for some reason)
+	$cmd = 'echo '.date('Y-m-d H:i:s').' >> '.$file.'_log';
+	$out = shell_exec($cmd);
+	$cmd = 'echo ------------------- >> '.$file.'_log';
+	$out = shell_exec($cmd);
+	$out = shell_exec("cat ".$file." >> ".$file.'_log');
+	//  FUTURE - how could this fail?  ... add parameter to pass back $out
+	}
+
 function seq_next_free($cat, $un, $offset) {
 	//  Scan generic catalog, find next free sequence number for username_seq id
 	//  cat     file path to catalog to search
@@ -101,6 +112,68 @@ class mt_lock {
 
 	}
 	
+class lists {
+	//  utility methods to write and retrieve array of multiple lists
+	//
+	//    # comment line
+	//    list1: value1, value2, value3
+	//    list2: value1, value2
+
+	static public function put($file, $fr) {
+		//  prepare array of all friends lists
+		//  $file    file to open - can be friends or invites
+		//  $fr      array, upon return contains list of friends
+		//  if error, ...
+		echo "\n<br>keyed_lists::put:";
+		ap($fr);
+		$result = false;
+		file_log($file);  //  why can't this be done after fopen?
+		if ($fh = fopen($file, 'w')) {
+			fwrite($fh, "#\n");  //  FUTURE, check if returns false, try/catch?
+			foreach ($fr as $k => $v) {
+				$str = $k.':';
+				$d = ' ';
+				foreach ($v as $k2 => $v2) {
+					$str .= $d.$v2;
+					$d = ', ';
+					}
+				$str .= "\n";
+				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+				}
+			$result = true;
+			if ($fh) fclose($fh);
+			}
+		return $result;
+		}
+
+	static public function get($file, &$fr) {  //  FUTURE - aren't arrays already passed by reference?
+		//  prepare array of all friends lists
+		//  $file    file to open - can be friends or invites
+		//  $fr      array, upon return contains list of friends
+		//  if error, ...
+		$result = false;
+		if ($fh = fopen($file, 'r')) {
+			while (($data = fgets($fh, 1000)) !== FALSE) {
+				if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
+					//  each line has username prefix demarked by :
+					$pos  = strpos($data, ':');
+					$u    = substr($data, 0 , $pos);
+					//  after :, comma seperated list of other users
+					$list = explode(',', substr($data, $pos + 1));
+					//  trim off leading/trailing whitespace
+					foreach ($list as $k => $v)
+						$list[$k] = trim($list[$k]);
+					$fr[$u] = $list;
+					}
+				}
+			$result = true;
+			fclose($fh);
+			}
+		return $result;
+		}
+
+	}  /*  lists class [end]  */
+
 const CONTENT_ORD = 0;  //  ...
 const CONTENT_UID = 1;
 const CONTENT_BYL = 2;  //  title | date, author
