@@ -86,6 +86,7 @@ function login_check($u, $p) {
 			foreach ($user_profiles as $ua => $ub) {
 				if ((isset($ub['handle'])) && trim($ub['handle']) == $u) {
 					$_SESSION['uid_dg'] = $ua;
+					$_SESSION['uid_dg_flgs'] = $ub['flgs'];
 					if ($feature_mask & FEATURE_COOK) {
 						$exp = time() + $cookie_expire;
 						setcookie( "username_dg",          $u, $exp, '/', $cookie_url);
@@ -243,6 +244,7 @@ const USERACCT_DATE = 2;
 const USERACCT_HASH = 3;  //  Doubles as password
 const USERACCT_FNAM = 4;
 const USERACCT_MAIL = 5;
+const USERACCT_FLGS = 6;  //  flags, account type (optional?)
 
 function get_user_profiles($file, &$users, &$raw = NULL) {
 	//  $file    account file: ID#, handle
@@ -260,6 +262,7 @@ function get_user_profiles($file, &$users, &$raw = NULL) {
 				if (isset($data[USERACCT_HASH])) $va['hash'] = $data[USERACCT_HASH];
 				if (isset($data[USERACCT_FNAM])) $va['fnam'] = $data[USERACCT_FNAM];
 				if (isset($data[USERACCT_MAIL])) $va['mail'] = $data[USERACCT_MAIL];
+				if (isset($data[USERACCT_FLGS])) $va['flgs'] = $data[USERACCT_FLGS];
 				$users[$data[USERACCT_ID]] = $va;
 				}
 			if (!is_null($raw))
