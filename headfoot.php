@@ -54,7 +54,7 @@ function body_lowright () {
 function foot() {
 	global $foot, $notes, $debug_mask;
 
-	echo "<div style=\"text-align: center; font-family: sans-serif;\"><br>".$foot.'</div>'; 
+	echo "<div style=\"text-align: center; font-family: sans-serif; margin-top: 0.5em;\">".$foot.'</div>'; 
 	if ($debug_mask & DEBUG_DISPSIZE)
 		echo "\n<div style=\"position: fixed; bottom: 0; right: 0; background-color: white; text-align: right; font-size: smaller;\">".$notes."<span id='mt_msg'></span></div>";
 	}
