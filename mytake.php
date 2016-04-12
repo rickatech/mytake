@@ -119,17 +119,17 @@ class lists {
 	//    list1: value1, value2, value3
 	//    list2: value1, value2
 
-	static public function put($file, $fr) {
+	static public function put($file, $fr, $hc = NULL) {
 		//  prepare array of all friends lists
 		//  $file    file to open - can be friends or invites
 		//  $fr      array, upon return contains list of friends
+		//  $hc      (optional) # comment header, if supplied MUST begin with #!
 		//  if error, ...
-//		echo "\n<br>keyed_lists::put:";
-//		ap($fr);
 		$result = false;
 		file_log($file);  //  why can't this be done after fopen?
 		if ($fh = fopen($file, 'w')) {
-			fwrite($fh, "#\n");  //  FUTURE, check if returns false, try/catch?
+			$str = (is_null($hc) ? '#' : $hc)."\n";
+			fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
 			foreach ($fr as $k => $v) {
 				$str = $k.':';
 				$d = ' ';
