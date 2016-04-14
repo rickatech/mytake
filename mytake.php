@@ -146,24 +146,35 @@ class lists {
 		return $result;
 		}
 
-	static public function get($file, &$fr) {  //  FUTURE - aren't arrays already passed by reference?
+	static public function get($file, &$fr, $m = NULL) {  //  FUTURE - aren't arrays already passed by reference?
 		//  prepare array of all friends lists
 		//  $file    file to open - can be friends or invites
 		//  $fr      array, upon return contains list of friends
+		//  $m       parse mode:
+		//             NULL, default for friend lists processing
+		//             'product', for active product processing
 		//  if error, ...
 		$result = false;
 		if ($fh = fopen($file, 'r')) {
 			while (($data = fgets($fh, 1000)) !== FALSE) {
 				if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
-					//  each line has username prefix demarked by :
-					$pos  = strpos($data, ':');
-					$u    = substr($data, 0 , $pos);
-					//  after :, comma seperated list of other users
-					$list = explode(',', substr($data, $pos + 1));
-					//  trim off leading/trailing whitespace
-					foreach ($list as $k => $v)
-						$list[$k] = trim($list[$k]);
-					$fr[$u] = $list;
+					if (is_null($m)) {
+						//  each line has username prefix demarked by :
+						$pos  = strpos($data, ':');
+						$u    = substr($data, 0 , $pos);
+						//  after :, comma seperated list of other users
+						$list = explode(',', substr($data, $pos + 1));
+						//  trim off leading/trailing whitespace
+						foreach ($list as $k => $v)
+							$list[$k] = trim($list[$k]);
+						$fr[$u] = $list;
+						}
+					else {
+						//  active product catalog processing
+						$list = explode(',', $data);
+						unset($list[$i]);
+						$fr[trim($list[1])][trim($list[2])] = array(trim($list[3]), $list[0]);
+						}
 					}
 				}
 			$result = true;
