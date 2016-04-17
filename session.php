@@ -6,6 +6,23 @@ session_start();
 
 //  FUTURE, make the following a class
 
+function ap($a) {
+	echo "<pre style=\"font-size: smaller;\">";
+	print_r($a);
+	echo "</pre>";
+	}
+
+function file_log($file) {
+	//  append log file with date stamp, followed by current active
+	//  file contents (in case a revert is needed for some reason)
+	$cmd = 'echo '.date('Y-m-d H:i:s').' >> '.$file.'_log';
+	$out = shell_exec($cmd);
+	$cmd = 'echo ------------------- >> '.$file.'_log';
+	$out = shell_exec($cmd);
+	$out = shell_exec("cat ".$file." >> ".$file.'_log');
+	//  FUTURE - how could this fail?  ... add parameter to pass back $out
+	}
+
 function session_detect() {
 	//  FUTURE, only allow if NOT isprod?
 	if (isset($_GET['debug'])) {
