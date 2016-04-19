@@ -155,7 +155,7 @@ class lists {
 					else {
 						//  active product catalog processing
 						$list = explode(',', $data);
-						unset($list[$i]);
+					//	unset($list[$i]);
 						$fr[trim($list[1])][trim($list[2])] = array(trim($list[3]), $list[0]);
 						}
 					}
