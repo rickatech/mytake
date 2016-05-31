@@ -263,6 +263,172 @@ const USERACCT_FNAM = 4;
 const USERACCT_MAIL = 5;
 const USERACCT_FLGS = 6;  //  flags, account type (optional?)
 
+class account {
+
+	public static function password_make($input) {
+		/*  return new password hash  */
+		//  CITATION
+		//  http://php.net/manual/en/faq.passwords.php#faq.passwords.fasthash
+		$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+		$salt = base64_encode($salt);
+		$salt = str_replace('+', '.', $salt);
+		$salt = '$2y$10$'.$salt.'$';
+		//  crypt() prepends result string with critical hash parameters
+		$hash = crypt($input, $salt);
+		echo "\n<br>salt: &nbsp; <tt>".$salt."</tt>\n<br>hash: <tt>".$hash.'</tt>';
+	//	echo "\n<br>equal: &nbsp; <tt>".$hash." / ".crypt($input, $hash).'</tt>';
+	//	if (hash_equals($hash, crypt($input, $hash)))
+//		CITATION - not available before PHP 5.5
+//		http://php.net/manual/en/function.password-hash.php
+//		$hash = password_hash($input, PASSWORD_DEFAULT);
+//		if (password_verify($input, $hash))
+			return $hash;
+	//	else
+	//		return false;
+		}
+
+	public static function password_accept($input, $hash) {
+		/*  indicate if user entered password matches stored hash  */
+//		CITATION - not available before PHP 5.5
+//		if (password_hash($input, PASSWORD_DEFAULT) == $hash)
+		//  crypt() needs reads critical hash parameters from prefix of stored hash
+		if ($hash == crypt($input, $hash))
+			return true;
+		return false;
+		}
+
+	public static function get($file, &$users, $sel = NULL, &$raw = NULL) {
+		//  build array of ...
+		//  if error, ...
+		//    $file    account file: ID#, handle
+		//    $users   pass in empty array, fill with [ID]['handle'] output
+		//    $raw     pass in empty array to collect raw rows (optional)
+		//    $sel     NULL, process all records
+		//             array of id's, skip non-mathing records
+		//  FUTURE: build a user profile class, allow custom (what this is), SQL, Facebook/OpenID support
+		$result = false;
+		if ($fh = fopen($file, 'r')) {
+			$sel_c = ($sel) ? count($sel) : 0;
+			while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
+				$sel_go = false;  //  true only if id match
+				if (is_null($sel) || $sel_go = in_array($data[USERACCT_ID], $sel)) {
+					if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
+						$va = array('handle' => $data[USERACCT_HNDL]);
+						if (isset($data[USERACCT_DATE])) $va['date'] = $data[USERACCT_DATE];
+						if (isset($data[USERACCT_HASH])) $va['hash'] = $data[USERACCT_HASH];
+						if (isset($data[USERACCT_FNAM])) $va['fnam'] = $data[USERACCT_FNAM];
+						if (isset($data[USERACCT_MAIL])) $va['mail'] = $data[USERACCT_MAIL];
+						if (isset($data[USERACCT_FLGS])) $va['flgs'] = $data[USERACCT_FLGS];
+						$users[$data[USERACCT_ID]] = $va;
+						}
+					if (!is_null($raw))
+						array_push($raw, $data);
+					if ($sel_go) {
+						//  if select array of id's to match passed in, okay to return early if all id's retrieved
+						$sel_c--;
+						if ($sel_c < 1)
+							break;
+						}
+					}
+				}
+			$result = true;
+			fclose($fh);
+			}
+		return $result;
+		}
+
+	private static function match(&$users, $id) {
+		echo "\n<br>id: ".$id;
+		foreach ($users as $k => $v) {
+		//	echo "\n<br>k: ".$k.', '.$id;
+			if ($k == $id)
+				return true;
+			}
+		return false;
+		}
+
+	public static function replace($file, &$users) {
+		//  Walk account list, rewrite matching record with updated values
+		//    $file    account file: ID#, handle
+		//    $users   pass in empty array, fill with [ID]['handle'] output
+		//    return  false if error, true otherwise
+		//  if error, ...
+		//  FUTURE: build a user profile class, allow custom (what this is), SQL, Facebook/OpenID support
+		$result = false;
+		$r = 0;
+//		echo "\n<br>A";
+//ap($users);
+//		echo "\n<br>B";
+		if (isset($user[USERACCT_ID]) &&  $user[USERACCT_ID] > 0)
+			$id_rep = $user[USERACCT_ID];
+		else
+			$id_rep = NULL;
+		if ($fr = fopen($file, 'r')) {
+			if ($fw = fopen($file.'_w', 'w')) {
+				//  ATTEMPT WRITE LOCK
+				if (mt_lock::get($file, $flock)) {  //  adds _lock suffix
+					while (($data = fgetcsv($fr, 1000, ",")) !== FALSE) {
+						if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
+							if ($r == 0) { //  preprepend updated record at start of file
+								foreach ($users as $k => $v) {
+									$str = $k;
+									$i = 1;
+									foreach ($v as $kk => $vv) {
+										$str .= ', "'.$vv.'"';
+										$i++;
+										}
+									fwrite($fw, $str."\n");  //  FUTURE, check if returns false?
+									}
+								}
+							$r++;
+							//  FUTURE - check for/purge stale '*' validation record
+							//  CITATION - http://php.net/manual/en/datetime.diff.php
+							if (static::match($users, $data[USERACCT_ID]) === FALSE) {
+								//  only write rows with non-redundant ID's
+								$rec = array();
+								if (isset($data[USERACCT_ID]))   $rec['id'] =   $data[USERACCT_ID];
+								if (isset($data[USERACCT_HNDL])) $rec['handle'] = $data[USERACCT_HNDL];
+								if (isset($data[USERACCT_DATE])) $rec['date'] = $data[USERACCT_DATE];
+								if (isset($data[USERACCT_HASH])) $rec['hash'] = $data[USERACCT_HASH];
+								if (isset($data[USERACCT_FNAM])) $rec['fnam'] = $data[USERACCT_FNAM];
+								if (isset($data[USERACCT_MAIL])) $rec['mail'] = $data[USERACCT_MAIL];
+								if (isset($data[USERACCT_FLGS])) $rec['flgs'] = $data[USERACCT_FLGS];
+								$i = 0;
+								foreach ($rec as $kk => $vv) {
+									if ($i > 0) $str .= ', "'.$vv.'"';
+									else        $str = $vv;
+								//	fwrite($fw, $str);  //  FUTURE, check if returns false?
+									$i++;
+									}
+								fwrite($fw, $str."\n");  //  FUTURE, check if returns false?
+								}
+							if ($r > 200)
+								break;
+							}
+						else {  //  try to retain comment rows
+							$i = 0;
+							foreach ($data as $k => $v) {
+								if ($i > 0) $str .= ','.$v;
+								else $str = $v;
+								$i++;
+								}
+							fwrite($fw, $str."\n");  //  FUTURE, check if returns false?
+							}
+						}
+					$result = true;
+					//  RELEASE WRITE LOCK
+					fclose($flock);
+					unlink($file.'_lock');
+					}
+				fclose($fw);
+				}
+			fclose($fr);
+			}
+		return $result;
+		}
+
+	}  /*  class account [end]  */
+
 function get_user_profiles($file, &$users, &$raw = NULL) {
 	//  $file    account file: ID#, handle
 	//  $users   pass in empty array, fill with [ID]['handle'] output

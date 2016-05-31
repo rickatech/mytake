@@ -51,11 +51,11 @@ class mt_lock {
 
 	static public function get($file, &$fh) {
 		//  get/open write lock - creates lock file
-		//  file    base filename to lock
-		//  fh      pointer to lock file handle (unset initially)
-		//  return  true, fh has been set to lock file handle
-		//          false, could not obtain lock,
-		//          spit out error to console, FUTURE syslog?
+		//    file    base filename to lock
+		//    fh      pointer to lock file handle (unset initially)
+		//    return  true, fh has been set to lock file handle
+		//            false, could not obtain lock,
+		//            spit out error to console, FUTURE syslog?
 		$tries = 0;
 		while ($tries < FOPEN_X_RETRIES) {
 			if ($fh = fopen($file.'_lock', 'x'))  //  fails if file already exists
