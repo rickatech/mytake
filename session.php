@@ -13,6 +13,8 @@ function ap($a) {
 	}
 
 function file_log($file) {
+	//  FUTURE - THIS IS SLOW, AVOID shell_exec, use native PHP file I/O
+	//  FUTURE - provide a diff vs full past state option
 	//  append log file with date stamp, followed by current active
 	//  file contents (in case a revert is needed for some reason)
 	$cmd = 'echo '.date('Y-m-d H:i:s').' >> '.$file.'_log';
@@ -102,15 +104,19 @@ function login_check($u, $p) {
 		if (get_user_profiles($file_profiles, $user_profiles)) {
 			foreach ($user_profiles as $ua => $ub) {
 				if ((isset($ub['handle'])) && trim($ub['handle']) == $u) {
-					$_SESSION['uid_dg'] = $ua;
-					$_SESSION['uid_dg_flgs'] = $ub['flgs'];
-					if ($feature_mask & FEATURE_COOK) {
-						$exp = time() + $cookie_expire;
-						setcookie( "username_dg",          $u, $exp, '/', $cookie_url);
-						setcookie( "username_dg_expire", $exp, $exp, '/', $cookie_url);
-						//  FUTURE: above cookie setting is moot?  ... need to follow with a request to server?
+					if ((isset($ub['hash'])) && account::password_accept($p, trim($ub['hash']))) {
+						//  FUTURE - for now 'password' is backdoor to NO PASSWORD!
+						$_SESSION['uid_dg'] = $ua;
+						$_SESSION['uid_dg_flgs'] = $ub['flgs'];
+						if ($feature_mask & FEATURE_COOK) {
+							$exp = time() + $cookie_expire;
+							setcookie( "username_dg",          $u, $exp, '/', $cookie_url);
+							setcookie( "username_dg_expire", $exp, $exp, '/', $cookie_url);
+							//  FUTURE: above cookie setting is moot?  ... need to follow with a request to server?
+							}
+						return (0);
 						}
-					return (0);
+					return ("bad password");
 					}
 				}
 			return ("bad username");
@@ -292,7 +298,8 @@ class account {
 //		CITATION - not available before PHP 5.5
 //		if (password_hash($input, PASSWORD_DEFAULT) == $hash)
 		//  crypt() needs reads critical hash parameters from prefix of stored hash
-		if ($hash == crypt($input, $hash))
+//		echo "\n<br>input: ".$input.", \n<br>hash: ".$hash;
+		if ($hash == 'password' || $hash == crypt($input, $hash))
 			return true;
 		return false;
 		}
@@ -359,16 +366,19 @@ class account {
 //		echo "\n<br>A";
 //ap($users);
 //		echo "\n<br>B";
-		if (isset($user[USERACCT_ID]) &&  $user[USERACCT_ID] > 0)
-			$id_rep = $user[USERACCT_ID];
-		else
-			$id_rep = NULL;
-		if ($fr = fopen($file, 'r')) {
-			if ($fw = fopen($file.'_w', 'w')) {
-				//  ATTEMPT WRITE LOCK
-				if (mt_lock::get($file, $flock)) {  //  adds _lock suffix
-					while (($data = fgetcsv($fr, 1000, ",")) !== FALSE) {
-						if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
+		//  ATTEMPT WRITE LOCK
+		if (mt_lock::get($file, $flock)) {  //  adds _lock suffix
+			if (isset($user[USERACCT_ID]) &&  $user[USERACCT_ID] > 0)
+				$id_rep = $user[USERACCT_ID];
+			else
+				$id_rep = NULL;
+			if ($fr = fopen($file, 'r')) {
+				if ($fw = fopen($file.'_w', 'w')) {
+					while (($data = fgetcsv($fr, 1000, ",")) !== FALSE ) {
+						if ($data[0] == NULL) {
+							//  ignore empty lines
+							}
+						elseif (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
 							if ($r == 0) { //  preprepend updated record at start of file
 								foreach ($users as $k => $v) {
 									$str = $k;
@@ -402,8 +412,8 @@ class account {
 									}
 								fwrite($fw, $str."\n");  //  FUTURE, check if returns false?
 								}
-							if ($r > 200)
-								break;
+			//				if ($r > 200)
+			//					break;
 							}
 						else {  //  try to retain comment rows
 							$i = 0;
@@ -415,15 +425,19 @@ class account {
 							fwrite($fw, $str."\n");  //  FUTURE, check if returns false?
 							}
 						}
+					fwrite($fw, "\n");  //  FUTURE, check if returns false?
 					$result = true;
-					//  RELEASE WRITE LOCK
-					fclose($flock);
-					unlink($file.'_lock');
 					}
 				fclose($fw);
 				}
 			fclose($fr);
 			}
+		//  FUTURE - log previous file state, or diff
+		file_log($file);
+		rename($file.'_w', $file);
+		//  RELEASE WRITE LOCK
+		fclose($flock);
+		unlink($file.'_lock');
 		return $result;
 		}
 
