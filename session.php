@@ -281,7 +281,7 @@ class account {
 		$salt = '$2y$10$'.$salt.'$';
 		//  crypt() prepends result string with critical hash parameters
 		$hash = crypt($input, $salt);
-		echo "\n<br>salt: &nbsp; <tt>".$salt."</tt>\n<br>hash: <tt>".$hash.'</tt>';
+//		echo "\n<br>salt: &nbsp; <tt>".$salt."</tt>\n<br>hash: <tt>".$hash.'</tt>';
 	//	echo "\n<br>equal: &nbsp; <tt>".$hash." / ".crypt($input, $hash).'</tt>';
 	//	if (hash_equals($hash, crypt($input, $hash)))
 //		CITATION - not available before PHP 5.5
@@ -345,7 +345,7 @@ class account {
 		}
 
 	private static function match(&$users, $id) {
-		echo "\n<br>id: ".$id;
+//		echo "\n<br>id: ".$id;
 		foreach ($users as $k => $v) {
 		//	echo "\n<br>k: ".$k.', '.$id;
 			if ($k == $id)
