@@ -23,6 +23,36 @@ function window_adjust() {
 //		}
 	if (debug_mask & 1)
 		document.getElementById('mt_msg').innerHTML = notes;
+
+	//  this kungfu will perform some repsonsive layout
+	//  any element with class=thing1 (narrow) will have
+	//  class=thing2 (wide) when larger display is detect
+	//  and visa versa
+//	if (typeof mytake_winadj_bpw1 !== 'undefined' && wix < mytake_winadj_bpw1) {
+	if (mytake_winadj_bpw1 !== undefined && wix < mytake_winadj_bpw1) {
+		//  FUTURE - store respnsive width state in persistent variable,
+		//           no need to class swap if repsonsive state is same as last time
+		//           ... so far attempts to do this are commented out :-/
+//		if ((typeof resplast === 'undefined') || (resplast != 2)) {
+			resplast = 2;  //  global, persistent!
+			var elements = document.getElementsByClassName('thing1');
+			for (var i in elements) {
+			  if (elements.hasOwnProperty(i))
+			    elements[i].className = 'thing2';
+			  }
+//			}
+		}
+	else {
+//		if ((typeof resplast === 'undefined') || (resplast != 4)) {
+			resplast = 4;  //  global, persistent!
+			var elements = document.getElementsByClassName('thing2');
+			for (var i in elements) {
+			  if (elements.hasOwnProperty(i))
+			    elements[i].className = 'thing1';
+			  }
+//			}
+		}
+//	alert(resplast);
 	}
 
 function detectKeyLogin(event) {
