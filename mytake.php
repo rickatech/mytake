@@ -367,11 +367,12 @@ const ECAT_UID =    1;
 const ECAT_TITLE =  2;
 const ECAT_DATE=    3;
 const ECAT_AUTHOR = 4;
-const ECAT_IMG=     5;
-const ECAT_ARTID =  6;  //  related article
-const ECAT_HTG =    7;  //  hash tags
-const ECAT_RES1 =   8;  //  pivot tags?
+const ECAT_PIVOT  = 5;
+const ECAT_IMG=     6;
+const ECAT_ARTID =  7;  //  related article
+const ECAT_HTG =    8;  //  hash tags
 const ECAT_RES2 =   9;  //  external URL?
+const ECAT_RES1 =  10;  //  media collection?
 
 const ECAT_NEW = 1;
 const ECAT_UPDATE = 2;
@@ -379,6 +380,7 @@ const ECAT_UPDATE = 2;
 class ecat {
 	//  collection of tools for updating exchange catalog
 
+	//  each httpd request is new instance so this is never shared
 	static public $ecat = NULL;
 
 	static public function seq_next($dir, $uid) {
@@ -416,7 +418,7 @@ class ecat {
 		//  then perform filter on in memory array (could be a memory pig)
 		}
 
-	function get($file, $autr = NULL, $eid = NULL) {
+	static public function get($file, $autr = NULL, $eid = NULL) {
 		//  autr    array of authors (primary)
 		//          NULL, all authors
 		//  eid     single eid to match (secondary)
@@ -485,7 +487,7 @@ class ecat {
 
 		/*  perform write processing here  */
 		$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
-		$str =  "# ord, id_readable, title, date, author, image, artid, htags\n";
+		$str =  "# ord, id_readable, title, date, author, pivot, image, artid, htags\n";
 		fwrite($fh, $str);
 
 //		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
@@ -505,6 +507,7 @@ if (1) {	//  test test
 				$str .= ', "'.$a['title'].'"';
 				$str .= ', "'.$a['date'].'"';
 				$str .= ', "'.$a['author'].'"';
+				$str .= ', "'.$a['pivot'].'"';
 				$str .= ', "stock"';
 				$str .= ', "'.$a['artid'].'"';
 				//  $str .= ', ".$a['ECAT_HTG'].'"';
@@ -528,6 +531,7 @@ if (1) {	//  test test
 						$str .= ', "'.$a['title'].'"';
 						$str .= ', "'.$a['date'].'"';
 						$str .= ', "'.$a['author'].'"';
+						$str .= ', "'.$a['pivot'].'"';
 						$str .= ', "'.$a['image'].'"';
 					//	$str .= ', "stock"';
 						$str .= ', "'.$a['artid'].'"';
