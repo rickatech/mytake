@@ -136,6 +136,7 @@ class lists {
 		//  $m       parse mode:
 		//             NULL, default for friend lists processing
 		//             'product', for active product processing
+		//  FUTURE - and friend2 parse mode, only return selected matching rows
 		//  if error, ...
 		$result = false;
 		if ($fh = fopen($file, 'r')) {
@@ -208,7 +209,8 @@ class acat {
 			return array(
 			  "article" => $art,
 			  "caption" => $da_cap,
-			  "tags" =>    $da_tag);
+			  "tags" =>    $da_tag,
+			  "img" =>     $da[0][CONTENT_IMG]);
 			}
 		return NULL;
 		}
