@@ -129,13 +129,17 @@ class lists {
 		return $result;
 		}
 
-	static public function get($file, &$fr, $m = NULL) {  //  FUTURE - aren't arrays already passed by reference?
+	static public function get($file, &$fr, $m = NULL, $au = NULL, $tu = NULL) {  //  FUTURE - aren't arrays already passed by reference?
 		//  prepare array of all friends lists
-		//  $file    file to open - can be friends or invites
-		//  $fr      array, upon return contains list of friends
-		//  $m       parse mode:
-		//             NULL, default for friend lists processing
-		//             'product', for active product processing
+		//    file    file to open - can be friends or invites
+		//    fr      array, upon return contains list of friends
+		//    m       parse mode:
+		//              NULL, default for friend lists processing
+		//              'product', for active product processing
+		//    au      aquiring username
+		//    tu      target username
+		//    return  false, error condition encountered
+		//            true, success
 		//  FUTURE - and friend2 parse mode, only return selected matching rows
 		//  if error, ...
 		$result = false;
@@ -147,11 +151,29 @@ class lists {
 						$pos  = strpos($data, ':');
 						$u    = substr($data, 0 , $pos);
 						//  after :, comma seperated list of other users
-						$list = explode(',', substr($data, $pos + 1));
-						//  trim off leading/trailing whitespace
-						foreach ($list as $k => $v)
-							$list[$k] = trim($list[$k]);
-						$fr[$u] = $list;
+						if ($tu) {  //  match mode
+							//  see if target username is listed in acquisition username row
+							if ($au != $u)
+								continue;
+							$list = explode(',', substr($data, $pos + 1));
+							//  trim off leading/trailing whitespace
+//echo "\n<br>aquiriing: ".$au.', target:'.$tu.':';
+//ap($list);
+							foreach ($list as $k => $v) {
+//echo "\n<br>:".$v.':';
+								if (trim($v) == $tu) {
+									$result = TRUE;
+									break 2;
+									}
+								}
+							}
+						else {
+							$list = explode(',', substr($data, $pos + 1));
+							//  trim off leading/trailing whitespace
+							foreach ($list as $k => $v)
+								$list[$k] = trim($list[$k]);
+							$fr[$u] = $list;
+							}
 						}
 					else {
 						//  active product catalog processing
@@ -161,7 +183,8 @@ class lists {
 						}
 					}
 				}
-			$result = true;
+			if (is_null($au))
+				$result = TRUE;
 			fclose($fh);
 			}
 		return $result;
