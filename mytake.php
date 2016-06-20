@@ -137,9 +137,11 @@ class lists {
 		//              NULL, default for friend lists processing
 		//              'product', for active product processing
 		//    au      aquiring username
-		//    tu      target username
+		//    tu      target username, for match result
+		//            'ct', for count result
 		//    return  false, error condition encountered
 		//            true, success
+		//            quantity, for list au if 'ct' passed in for tu
 		//  FUTURE - and friend2 parse mode, only return selected matching rows
 		//  if error, ...
 		$result = false;
@@ -151,16 +153,18 @@ class lists {
 						$pos  = strpos($data, ':');
 						$u    = substr($data, 0 , $pos);
 						//  after :, comma seperated list of other users
-						if ($tu) {  //  match mode
-							//  see if target username is listed in acquisition username row
+						if ($au) {  //  match mode
+							//  check target username listed in acquisition username row
+							//  or record quantity
 							if ($au != $u)
 								continue;
 							$list = explode(',', substr($data, $pos + 1));
+							if ($tu == 'ct') {
+								$result = count($list);
+								break;
+								}
 							//  trim off leading/trailing whitespace
-//echo "\n<br>aquiriing: ".$au.', target:'.$tu.':';
-//ap($list);
 							foreach ($list as $k => $v) {
-//echo "\n<br>:".$v.':';
 								if (trim($v) == $tu) {
 									$result = TRUE;
 									break 2;
