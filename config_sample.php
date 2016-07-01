@@ -19,6 +19,9 @@ $brand_l = "<span style=\"font-family: Helvetica Narrow,Arial Narrow,Tahoma,Aria
 const DESK_WIDTH_MIN = 1024;
 const DESK_WIDTH_PAD =  144;
 
+const MAX_LINE_LENGTH = 1000;   //  used for various plain text array files
+const FOPEN_X_RETRIES = 3;  //  used for various file write locks
+
 //  toggle targeted features
 const FEATURE_COOK =   1;       //  enabled cookie to remember username
 const FEATURE_PROFILE = 2;      //  login user name has javascript profile call

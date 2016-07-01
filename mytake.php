@@ -146,7 +146,8 @@ class lists {
 		//  if error, ...
 		$result = false;
 		if ($fh = fopen($file, 'r')) {
-			while (($data = fgets($fh, 1000)) !== FALSE) {
+			while (($data = fgets($fh, defined('MAX_LINE_LENGTH') ? MAX_LINE_LENGTH : 1000)) !== FALSE) {
+//			while (($data = fgets($fh, 2000)) !== FALSE) {
 				if (strpos($data[0], '#') === FALSE) {  //  skip if comment, #
 					if (is_null($m)) {
 						//  each line has username prefix demarked by :
