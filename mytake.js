@@ -72,3 +72,83 @@ function head_login() {
 function head_logout() {
 	window.open('?ajax=0&logout', '_self');
         }
+
+function mt_post(event, fs, url, out, fn, fn2) {
+	//  Javascript AJAX POST wrapper with multifile upload support
+	//    event   internal event triggering submit
+	//    fs      form files input id
+	//    url     URL to process POST request
+	//    out     div element, replace content with AJAX output
+	//    fn      custom function to call to indicate in progress
+	//    fn2     custom function to call upon success
+	//  CITATION  pure javascript multi-file upload :-D http://blog.teamtreehouse.com/uploading-files-ajax
+	var files;
+	var formData = new FormData();
+	var file;
+	var i;
+	var js_type;
+	var mf = false;
+
+	fn();  //  custom 'in progress' call
+
+	//  For standard inputs javascript has no easy way to disccover,
+	//  so parse special input string to determine them
+	//    js_nf   form includes NO file upload fields
+	//    js_mf   form includes multi-file upload field
+	// CITATION - http://stackoverflow.com/questions/3010840/loop-through-an-array-in-javascript
+	if ((js_type = document.getElementsByName('js_mf')).length > 0) {
+		js_type[0].value.split(',').forEach( function(s) { 
+			formData.append(s, document.getElementsByName(s)[0].value);
+			} );
+		mf = true;
+		}
+	else if ((js_type = document.getElementsByName('js_nf')).length > 0) {
+//	else if (js_type = document.getElementsByName('js_nf')) {
+//		alert('z2');
+		js_type[0].value.split(',').forEach( function(s) { 
+			formData.append(s, document.getElementsByName(s)[0].value);
+			} );
+		}
+
+	//   Disable standard processing (same as returning false?)
+	event.preventDefault();
+
+//	alert('zz');
+	if (mf) {
+		files = document.getElementById(fs).files;
+		// Loop through each of the selected files.
+		for (i = 0; i < files.length; i++) {
+			file = files[i];
+
+			// Check the file type.
+			if (!file.type.match('image.*')) {
+				continue;
+				}
+
+			// Add the file to the request.
+			formData.append('photos[]', file, file.name);
+			}
+		}
+
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', url, true);
+	xhr.onload = function () {
+		if (xhr.status === 200) {
+			//  File(s) uploaded
+			document.getElementById(out).innerHTML = xhr.responseText;
+			fn2();  //  custom 'completed' call
+			//  XXXX
+			//  wiz_01_msg
+			//    div hidden
+			//      wiz_01_status: 'success' | 'fail'
+			//      wiz_01_next: inline HTML of next form
+			//  wiz_01_body, need another custom function to check status of previous call
+			//  CITATION: http://stackoverflow.com/questions/1279957/how-to-move-an-element-into-another-element
+			}
+		else {
+			alert('An error occurred!');
+			}
+		};
+	xhr.send(formData);
+	}
+
