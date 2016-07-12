@@ -345,17 +345,20 @@ class account {
 		}
 
 	private static function match(&$users, $id) {
-//		echo "\n<br>id: ".$id;
+		//  Detect id match against any user record
+		//    $users  array may contain multiple records
+		//    $id
 		foreach ($users as $k => $v) {
-		//	echo "\n<br>k: ".$k.', '.$id;
 			if ($k == $id)
-				return true;
+				return TRUE;
 			}
-		return false;
+		return FALSE;
 		}
 
 	public static function replace($file, &$users) {
-		//  Walk account list, rewrite matching record with updated values
+		//  Cowboy file version
+		//  Prepend updated record with updated values at start of file.
+		//  Walk account list, rewrite non-matching rows.
 		//    $file    account file: ID#, handle
 		//    $users   pass in empty array, fill with [ID]['handle'] output
 		//    return  false if error, true otherwise
@@ -363,9 +366,6 @@ class account {
 		//  FUTURE: build a user profile class, allow custom (what this is), SQL, Facebook/OpenID support
 		$result = false;
 		$r = 0;
-//		echo "\n<br>A";
-//ap($users);
-//		echo "\n<br>B";
 		//  ATTEMPT WRITE LOCK
 		if (mt_lock::get($file, $flock)) {  //  adds _lock suffix
 			if (isset($user[USERACCT_ID]) &&  $user[USERACCT_ID] > 0)
