@@ -97,6 +97,7 @@ function mt_post(event, fs, url, out, fn, fn2) {
 	//    js_mf   form includes multi-file upload field
 	// CITATION - http://stackoverflow.com/questions/3010840/loop-through-an-array-in-javascript
 	if ((js_type = document.getElementsByName('js_mf')).length > 0) {
+//		alert('z1');
 		js_type[0].value.split(',').forEach( function(s) { 
 			formData.append(s, document.getElementsByName(s)[0].value);
 			} );
