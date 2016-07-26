@@ -1,4 +1,5 @@
 function window_adjust() {
+	var i;
 	var dwin = document.getElementById('main_div');
 	var wox = window.outerWidth;
 	var wix = window.innerWidth;
@@ -36,9 +37,19 @@ function window_adjust() {
 //		if ((typeof resplast === 'undefined') || (resplast != 2)) {
 			resplast = 2;  //  global, persistent!
 			var elements = document.getElementsByClassName('thing1');
-			for (var i in elements) {
+			for (i in elements) {
 			  if (elements.hasOwnProperty(i))
 			    elements[i].className = 'thing2';
+			  }
+			elements = document.getElementsByClassName('col_left');
+			for (i in elements) {
+			  if (elements.hasOwnProperty(i))
+			    elements[i].className = 'col_full';
+			  }
+			elements = document.getElementsByClassName('col_stretch');
+			for (i in elements) {
+			  if (elements.hasOwnProperty(i))
+			    elements[i].className = 'col_fll2';
 			  }
 //			}
 		}
@@ -46,9 +57,19 @@ function window_adjust() {
 //		if ((typeof resplast === 'undefined') || (resplast != 4)) {
 			resplast = 4;  //  global, persistent!
 			var elements = document.getElementsByClassName('thing2');
-			for (var i in elements) {
+			for (i in elements) {
 			  if (elements.hasOwnProperty(i))
 			    elements[i].className = 'thing1';
+			  }
+			elements = document.getElementsByClassName('col_full');
+			for (i in elements) {
+			  if (elements.hasOwnProperty(i))
+			    elements[i].className = 'col_left';
+			  }
+			elements = document.getElementsByClassName('col_fll2');
+			for (i in elements) {
+			  if (elements.hasOwnProperty(i))
+			    elements[i].className = 'col_stretch';
 			  }
 //			}
 		}
