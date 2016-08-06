@@ -59,8 +59,10 @@ function session_detect() {
 			$_SESSION['username_dg_prev'] = $_SESSION['username_dg'];
 			unset($_SESSION['username_dg']);
 			}
-		if (isset($_SESSION['uid_dg']))
+		if (isset($_SESSION['uid_dg'])) {
 			unset($_SESSION['uid_dg']);
+			unset($_SESSION['uid_dg_flgs']);
+			}
 		}
 	}
 
@@ -155,6 +157,7 @@ function login_state(&$out, $hint = NULL) {
 	/*  return 0  invalid login - output username, password form  */
 	if (isset($_POST['username_dg']) && isset($_POST['password'])) {  // clasic POST form
 		unset($_SESSION['uid_dg']);
+		unset($_SESSION['uid_dg_flgs']);
 		/*  login_check will set $_SESSION['uid_dg'] for valid login  */
 		if ($msg = login_check($_POST['username_dg'], $_POST['password'])) {
 			//  echo "<span style=\"color: #ff0000;\">".$msg."</span> ";
@@ -163,7 +166,7 @@ function login_state(&$out, $hint = NULL) {
 		}
 	if (isset($_GET['username_dg']) && isset($_GET['password'])) {  // new AJAX form
 		unset($_SESSION['uid_dg']);
-		/*  login_check will set $_SESSION['uid_dg'] for valid login  */
+		unset($_SESSION['uid_dg_flgs']);
 		if ($msg = login_check($_GET['username_dg'], $_GET['password'])) {
 			//  echo "<span style=\"color: #ff0000;\">".$msg."</span> ";
 			unset($_SESSION['username_dg']);
@@ -270,6 +273,8 @@ const USERACCT_MAIL = 5;
 const USERACCT_FLGS = 6;  //  flags, account type (optional?)
 
 class account {
+
+	//  FUTURE - consider adding static properties for current logged in properties
 
 	public static function password_make($input) {
 		/*  return new password hash  */
