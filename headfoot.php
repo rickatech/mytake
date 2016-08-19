@@ -26,9 +26,11 @@ function head_body($class = NULL, $pos = NULL) {
 		}
 	echo "\n<div".$dc." id='main_div'";
         if (!$dflags & DFLAGS_MOBILE) {  // i.e. not mobile
-		echo "\n  style=\"position: relative; width: ".DESK_WIDTH_MIN."; background: #FFFFFF; border: solid; margin: auto;\">";
+	//	echo "\n  style=\"position: relative; width: ".DESK_WIDTH_MIN."; background: #FFFFFF; border0: solid; margin: auto;\">";
+		echo "\n  style=\"width: ".DESK_WIDTH_MIN.";\">";
         } else {
-		echo "\n  style=\"position: relative; background: #FFFFFF; border: solid;\">";
+	//	echo "\n  style=\"position: relative; background: #FFFFFF; border: solid;\">";
+		echo '>';
         	}
 	if ($pos) {  //  FUTURE - some of below should be a shared function?
 		echo "\n<div id=\"login_up\" style=\"position: absolute; right: 0px; top: 0; margin: 4px; text-align: right;\">".$login_form."</div>";
