@@ -101,6 +101,9 @@ class lists {
 	//    # comment line
 	//    list1: value1, value2, value3
 	//    list2: value1, value2
+	//  FUTURE - allow long lists to be multi-line,
+	//           support a continueation character like \ or ,
+	//           at end of line to indicate list has more elements
 
 	static public function put($file, $fr, $hc = NULL) {
 		//  prepare array of all friends lists
