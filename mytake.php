@@ -395,6 +395,7 @@ class acat {
 
 	}  //  acat [end]
 
+//  FUTURE - this should be a base class, additional fields added as a child class?
 const ECAT_ORD =    0;
 const ECAT_UID =    1;
 const ECAT_TITLE =  2;
@@ -403,9 +404,13 @@ const ECAT_AUTHOR = 4;
 const ECAT_PIVOT  = 5;
 const ECAT_IMG=     6;
 const ECAT_ARTID =  7;  //  related article
-const ECAT_HTG =    8;  //  hash tags
-const ECAT_RES2 =   9;  //  external URL?
-const ECAT_RES1 =  10;  //  media collection?
+const ECAT_HTG =    8;  //  hash tags (use pipe | to delimit multiple)
+const ECAT_PM_FR =  9;  //  private message, from
+const ECAT_RES1 =   9;  //  external URL?
+const ECAT_PM_TO = 10;  //  private message, to
+const ECAT_RES2 =  10;  //  media collection?
+const ECAT_PM_CC = 11;  //  private message, carbon copy
+const ECAT_PM_BC = 12;  //  private message, blind carbon copy
 
 const ECAT_NEW = 1;
 const ECAT_UPDATE = 2;
@@ -451,12 +456,14 @@ class ecat {
 		//  then perform filter on in memory array (could be a memory pig)
 		}
 
-	static public function get($file, $autr = NULL, $eid = NULL) {
+	static public function get($file, $autr = NULL, $eid = NULL, $tags = NULL) {
 		//  autr    array of authors (primary)
 		//          NULL, all authors
 		//  eid     single eid to match (secondary)
 		//          FUTURE - array of exchange ID (secondary)
 		//          NULL, don't limit exchange ID's
+		//  tags    array of tags to match
+		//          NULL, don't limit by tags
 		//  return  array containing exchange catalog
 		//          NULL if nothing found
 		//  related: get_map()
@@ -473,13 +480,26 @@ class ecat {
 	        if ($fh = fopen($file, 'r')) {
 	                while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
 				if ($data[ECAT_ORD][0] != '#') {  //  skip past column titles row
-					if ($eid)
-						$m = ($eid == $data[ECAT_UID]) ? true : false;
-					else if ($autr) {  //  limit to only authors contained in list
-						$m = in_array($data[ECAT_AUTHOR], $autr) ? true : false;
+					if ($tags) {  /*  be fanTAGstic!  */
+					    //  any one tag matches at least one tag in record = match
+					    $tm = FALSE;
+					    if (isset($data[ECAT_HTG])) {
+					        $ta = explode("|", $data[ECAT_HTG]);
+					        foreach ($ta as $k => $v) {
+						    if (in_array($v, $tags)) {
+						        $tm = TRUE;  break;
+						        }
+						    }
+						}
+					    }
+					else $tm = TRUE;  /*  be tag agnostic  */
+					if ($tm & $eid)
+						$m = ($eid == $data[ECAT_UID]) ? TRUE : FALSE;
+					else if ($tm & $autr) {  //  limit to only authors contained in list
+						$m = in_array($data[ECAT_AUTHOR], $autr) ? TRUE : FALSE;
 						}
 					else
-						$m = true;
+						$m = $tm;
 					if ($m) {
 		                                $cat[$row] = $data;
 						$row++;
