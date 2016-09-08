@@ -449,9 +449,9 @@ class ecat {
 		return ($result);  //  could not write exchange seq file: $file_seq
 		}
 
-	static public function get2($file, $tag = NULL, $eid = NULL) {
+	static public function get2($file, $autr = NULL, $eid = NULL, $tags = NULL) {
 		//  sets public $ecat property to result of catalog fetch
-		self::$ecat = self::get($file, $tag, $eid);
+		self::$ecat = self::get($file, $autr, $eid, $tags);
 		//  FUTURE - refactor to pull in all records?  ...
 		//  then perform filter on in memory array (could be a memory pig)
 		}
@@ -492,18 +492,18 @@ class ecat {
 						    }
 						}
 					    }
-					else $tm = TRUE;  /*  be tag agnostic  */
-					if ($tm & $eid)
-						$m = ($eid == $data[ECAT_UID]) ? TRUE : FALSE;
-					else if ($tm & $autr) {  //  limit to only authors contained in list
-						$m = in_array($data[ECAT_AUTHOR], $autr) ? TRUE : FALSE;
-						}
 					else
-						$m = $tm;
+					    $tm = TRUE;  /*  be tag agnostic  */
+					if ($tm && $eid)
+					    $m = ($eid == $data[ECAT_UID]) ? TRUE : FALSE;
+					else if ($tm && $autr)  //  limit to only authors contained in list
+					    $m = in_array($data[ECAT_AUTHOR], $autr) ? TRUE : FALSE;
+					else
+					    $m = $tm;
 					if ($m) {
-		                                $cat[$row] = $data;
-						$row++;
-						}
+		                            $cat[$row] = $data;
+					    $row++;
+					    }
 		                        }
 				}
 			fclose($fh);
