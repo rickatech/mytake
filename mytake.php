@@ -515,11 +515,15 @@ class ecat {
 			}
 		}
 
-	static public function update($file, $cmd, $a) {
+	static public function update($file, $cmd, $a, $hstr = '#', $a2 = NULL) {  /*  ecat  */
+//	static public function update($file, $cmd, $a, $hstr = self::ECAT_HSTR) {  /*  ecat  */
 		//  complete rewrite catalog with updated, added, dropped records
 		//  file    catalog filename, including full path  
 		//  cmd     NEW|UPDATE 
 		//  a       new/updated article record array
+		//  hstr    header comment string
+		//  a2      NULL, no special field array to process
+		//          special field array, carefully ordered to include code fields, followed by extra non-core fields
 		//  return  true, successful
 		//          false, failed/incomplete
 		//  Initial code lifted from acat::update().
@@ -540,12 +544,16 @@ class ecat {
 
 		/*  perform write processing here  */
 		$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
-		$str =  "# ord, id_readable, title, date, author, pivot, image, artid, htags\n";
-		fwrite($fh, $str);
+	//	$str =  "# ord, id_readable, title, date, author, pivot, image, artid, htags\n";
+	//	fwrite($fh, $str);
+	//	echo "\n<br>".$hstr;
+		fwrite($fh, $hstr."\n");
 
 //		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
-//		ap($a);
-if (1) {	//  test test
+		echo "\n<br>a:";  ap($a);
+		echo "\n<br>a2: ";  if ($a2) ap($a2); else echo 'NULL';
+
+//  if (1) {	//  test test
 		$row = 0;
 		if ($cmd == ECAT_NEW) {
 				//  FUTURE - it is possible that this uid file already exists
@@ -578,18 +586,31 @@ if (1) {	//  test test
 						$act_done = true;
 						if (isset($a['ord']))
 							$o = $a['ord'];
-						//  FUTURE - following code in a small utility function?
-						$str  = $o;
-						$str .= ', "'.$a['eid'].'"';
-						$str .= ', "'.$a['title'].'"';
-						$str .= ', "'.$a['date'].'"';
-						$str .= ', "'.$a['author'].'"';
-						$str .= ', "'.$a['pivot'].'"';
-						$str .= ', "'.$a['image'].'"';
-					//	$str .= ', "stock"';
-						$str .= ', "'.$a['artid'].'"';
-						//  $str .= ', ".$a['ECAT_HTG'].'"';
-						$str .= "\n";
+						if ($a2) {
+						    //  FUTURE - refactor all calls to use this!
+						    //  this is WAY better, flexible field count handled by caller
+						    unset($a2[0]);
+						    $str = $o.', "'.implode('", "', $a2)."\"\n";
+						    }
+						else {
+						    $str  = $o;
+						    $str .= ', "'.$a['eid'].'"';
+						    $str .= ', "'.$a['title'].'"';
+						    $str .= ', "'.$a['date'].'"';
+						    $str .= ', "'.$a['author'].'"';
+						    $str .= ', "'.$a['pivot'].'"';
+						    $str .= ', "'.$a['image'].'"';
+					//	    $str .= ', "stock"';
+						    $str .= ', "'.$a['artid'].'"';
+						    //  $str .= ', ".$a['ECAT_HTG'].'"';
+						    $str .= "\n";
+						    }
+
+//unset($a2[0]);
+//$str2 = $o.', "'.implode('", "', $a2).'"';
+//echo "\n<pre>str:  ".$str;
+echo "\n<pre>str: ".$str.'</pre>';
+
 						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
 						$o++;
 						}
@@ -610,7 +631,7 @@ if (1) {	//  test test
 		else
 			echo '<br>could not access ecat';
 
-	}  //  testtest
+//	}  //  testtest
 		if ($fh) fclose($fh);
 		if ($act_done)
 			rename($file, $file.'_0');
