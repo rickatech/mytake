@@ -544,38 +544,41 @@ class ecat {
 
 		/*  perform write processing here  */
 		$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
-	//	$str =  "# ord, id_readable, title, date, author, pivot, image, artid, htags\n";
-	//	fwrite($fh, $str);
-	//	echo "\n<br>".$hstr;
 		fwrite($fh, $hstr."\n");
 
 //		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
 		echo "\n<br>a:";  ap($a);
 		echo "\n<br>a2: ";  if ($a2) ap($a2); else echo 'NULL';
 
-//  if (1) {	//  test test
 		$row = 0;
 		if ($cmd == ECAT_NEW) {
-				//  FUTURE - it is possible that this uid file already exists
-				//           could do a fopen(x) and if it fails then bail with error
-				//           saying new file would overwrite existing content
-				$act_done = true;
-				if (isset($a['ord']))
-					$o = $a['ord'];
-				//  FUTURE - following code in a small utility function?
-				$str  = $o;
-				$str .= ', "'.$a['eid'].'"';
-				$str .= ', "'.$a['title'].'"';
-				$str .= ', "'.$a['date'].'"';
-				$str .= ', "'.$a['author'].'"';
-				$str .= ', "'.$a['pivot'].'"';
-				$str .= ', "stock"';
-				$str .= ', "'.$a['artid'].'"';
-				//  $str .= ', ".$a['ECAT_HTG'].'"';
-				$str .= "\n";
-				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
-				$o++;
-				$row++;
+			//  FUTURE - it is possible that this uid file already exists
+			//           could do a fopen(x) and if it fails then bail with error
+			//           saying new file would overwrite existing content
+			$act_done = true;
+			if (isset($a['ord']))
+				$o = $a['ord'];
+			if ($a2) {
+			    //  FUTURE - refactor all calls to use this!
+			    //  this is WAY better, flexible field count handled by caller
+			    unset($a2[0]);
+			    $str = $o.', "'.implode('", "', $a2)."\"\n";
+			    }
+			else {
+			    $str  = $o;
+			    $str .= ', "'.$a['eid'].'"';
+			    $str .= ', "'.$a['title'].'"';
+			    $str .= ', "'.$a['date'].'"';
+			    $str .= ', "'.$a['author'].'"';
+			    $str .= ', "'.$a['pivot'].'"';
+			    $str .= ', "stock"';
+			    $str .= ', "'.$a['artid'].'"';
+			    //  $str .= ', ".$a['ECAT_HTG'].'"';
+			    $str .= "\n";
+			    }
+			fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+			$o++;
+			$row++;
 			}
 
 		if ($fr = fopen($file, 'r')) {
@@ -631,7 +634,6 @@ echo "\n<pre>str: ".$str.'</pre>';
 		else
 			echo '<br>could not access ecat';
 
-//	}  //  testtest
 		if ($fh) fclose($fh);
 		if ($act_done)
 			rename($file, $file.'_0');
