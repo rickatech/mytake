@@ -1,5 +1,5 @@
 <?PHP
-$version = 'v0.0.3';
+$version = 'v0.0.4';
 $home_url = '/';
 $actv_url = 'http://mytake.zaptech.com/';
 $edit_url = 'https://blog.zaptech.com/?file=mytake/';
