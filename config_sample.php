@@ -1,5 +1,7 @@
 <?PHP
-$version = 'v0.0.3';
+$version = 'v0.0.4';
+//  tag filtering to get()
+//  private message/flexible calling fields support to ecat::update
 $home_url = '/';
 $actv_url = 'http://mytake.zaptech.com/';
 $edit_url = 'https://blog.zaptech.com/?file=mytake/';

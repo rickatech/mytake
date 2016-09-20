@@ -395,6 +395,7 @@ class acat {
 
 	}  //  acat [end]
 
+//  FUTURE - this should be a base class, additional fields added as a child class?
 const ECAT_ORD =    0;
 const ECAT_UID =    1;
 const ECAT_TITLE =  2;
@@ -403,9 +404,13 @@ const ECAT_AUTHOR = 4;
 const ECAT_PIVOT  = 5;
 const ECAT_IMG=     6;
 const ECAT_ARTID =  7;  //  related article
-const ECAT_HTG =    8;  //  hash tags
-const ECAT_RES2 =   9;  //  external URL?
-const ECAT_RES1 =  10;  //  media collection?
+const ECAT_HTG =    8;  //  hash tags (use pipe | to delimit multiple)
+const ECAT_PM_FR =  9;  //  private message, from
+const ECAT_RES1 =   9;  //  external URL?
+const ECAT_PM_TO = 10;  //  private message, to
+const ECAT_RES2 =  10;  //  media collection?
+const ECAT_PM_CC = 11;  //  private message, carbon copy
+const ECAT_PM_BC = 12;  //  private message, blind carbon copy
 
 const ECAT_NEW = 1;
 const ECAT_UPDATE = 2;
@@ -444,19 +449,21 @@ class ecat {
 		return ($result);  //  could not write exchange seq file: $file_seq
 		}
 
-	static public function get2($file, $tag = NULL, $eid = NULL) {
+	static public function get2($file, $autr = NULL, $eid = NULL, $tags = NULL) {
 		//  sets public $ecat property to result of catalog fetch
-		self::$ecat = self::get($file, $tag, $eid);
+		self::$ecat = self::get($file, $autr, $eid, $tags);
 		//  FUTURE - refactor to pull in all records?  ...
 		//  then perform filter on in memory array (could be a memory pig)
 		}
 
-	static public function get($file, $autr = NULL, $eid = NULL) {
+	static public function get($file, $autr = NULL, $eid = NULL, $tags = NULL) {
 		//  autr    array of authors (primary)
 		//          NULL, all authors
 		//  eid     single eid to match (secondary)
 		//          FUTURE - array of exchange ID (secondary)
 		//          NULL, don't limit exchange ID's
+		//  tags    array of tags to match
+		//          NULL, don't limit by tags
 		//  return  array containing exchange catalog
 		//          NULL if nothing found
 		//  related: get_map()
@@ -473,17 +480,30 @@ class ecat {
 	        if ($fh = fopen($file, 'r')) {
 	                while (($data = fgetcsv($fh, 1000, ",")) !== FALSE) {
 				if ($data[ECAT_ORD][0] != '#') {  //  skip past column titles row
-					if ($eid)
-						$m = ($eid == $data[ECAT_UID]) ? true : false;
-					else if ($autr) {  //  limit to only authors contained in list
-						$m = in_array($data[ECAT_AUTHOR], $autr) ? true : false;
+					if ($tags) {  /*  be fanTAGstic!  */
+					    //  any one tag matches at least one tag in record = match
+					    $tm = FALSE;
+					    if (isset($data[ECAT_HTG])) {
+					        $ta = explode("|", $data[ECAT_HTG]);
+					        foreach ($ta as $k => $v) {
+						    if (in_array($v, $tags)) {
+						        $tm = TRUE;  break;
+						        }
+						    }
 						}
+					    }
 					else
-						$m = true;
+					    $tm = TRUE;  /*  be tag agnostic  */
+					if ($tm && $eid)
+					    $m = ($eid == $data[ECAT_UID]) ? TRUE : FALSE;
+					else if ($tm && $autr)  //  limit to only authors contained in list
+					    $m = in_array($data[ECAT_AUTHOR], $autr) ? TRUE : FALSE;
+					else
+					    $m = $tm;
 					if ($m) {
-		                                $cat[$row] = $data;
-						$row++;
-						}
+		                            $cat[$row] = $data;
+					    $row++;
+					    }
 		                        }
 				}
 			fclose($fh);
@@ -495,11 +515,15 @@ class ecat {
 			}
 		}
 
-	static public function update($file, $cmd, $a) {
+	static public function update($file, $cmd, $a, $hstr = '#', $a2 = NULL) {  /*  ecat  */
+//	static public function update($file, $cmd, $a, $hstr = self::ECAT_HSTR) {  /*  ecat  */
 		//  complete rewrite catalog with updated, added, dropped records
 		//  file    catalog filename, including full path  
 		//  cmd     NEW|UPDATE 
 		//  a       new/updated article record array
+		//  hstr    header comment string
+		//  a2      NULL, no special field array to process
+		//          special field array, carefully ordered to include code fields, followed by extra non-core fields
 		//  return  true, successful
 		//          false, failed/incomplete
 		//  Initial code lifted from acat::update().
@@ -520,34 +544,41 @@ class ecat {
 
 		/*  perform write processing here  */
 		$o = 1;  //  FUTURE is ordinal needed?  ... should form preserve it?
-		$str =  "# ord, id_readable, title, date, author, pivot, image, artid, htags\n";
-		fwrite($fh, $str);
+		fwrite($fh, $hstr."\n");
 
 //		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
-//		ap($a);
-if (1) {	//  test test
+		echo "\n<br>a:";  ap($a);
+		echo "\n<br>a2: ";  if ($a2) ap($a2); else echo 'NULL';
+
 		$row = 0;
 		if ($cmd == ECAT_NEW) {
-				//  FUTURE - it is possible that this uid file already exists
-				//           could do a fopen(x) and if it fails then bail with error
-				//           saying new file would overwrite existing content
-				$act_done = true;
-				if (isset($a['ord']))
-					$o = $a['ord'];
-				//  FUTURE - following code in a small utility function?
-				$str  = $o;
-				$str .= ', "'.$a['eid'].'"';
-				$str .= ', "'.$a['title'].'"';
-				$str .= ', "'.$a['date'].'"';
-				$str .= ', "'.$a['author'].'"';
-				$str .= ', "'.$a['pivot'].'"';
-				$str .= ', "stock"';
-				$str .= ', "'.$a['artid'].'"';
-				//  $str .= ', ".$a['ECAT_HTG'].'"';
-				$str .= "\n";
-				fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
-				$o++;
-				$row++;
+			//  FUTURE - it is possible that this uid file already exists
+			//           could do a fopen(x) and if it fails then bail with error
+			//           saying new file would overwrite existing content
+			$act_done = true;
+			if (isset($a['ord']))
+				$o = $a['ord'];
+			if ($a2) {
+			    //  FUTURE - refactor all calls to use this!
+			    //  this is WAY better, flexible field count handled by caller
+			    unset($a2[0]);
+			    $str = $o.', "'.implode('", "', $a2)."\"\n";
+			    }
+			else {
+			    $str  = $o;
+			    $str .= ', "'.$a['eid'].'"';
+			    $str .= ', "'.$a['title'].'"';
+			    $str .= ', "'.$a['date'].'"';
+			    $str .= ', "'.$a['author'].'"';
+			    $str .= ', "'.$a['pivot'].'"';
+			    $str .= ', "stock"';
+			    $str .= ', "'.$a['artid'].'"';
+			    //  $str .= ', ".$a['ECAT_HTG'].'"';
+			    $str .= "\n";
+			    }
+			fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
+			$o++;
+			$row++;
 			}
 
 		if ($fr = fopen($file, 'r')) {
@@ -558,18 +589,31 @@ if (1) {	//  test test
 						$act_done = true;
 						if (isset($a['ord']))
 							$o = $a['ord'];
-						//  FUTURE - following code in a small utility function?
-						$str  = $o;
-						$str .= ', "'.$a['eid'].'"';
-						$str .= ', "'.$a['title'].'"';
-						$str .= ', "'.$a['date'].'"';
-						$str .= ', "'.$a['author'].'"';
-						$str .= ', "'.$a['pivot'].'"';
-						$str .= ', "'.$a['image'].'"';
-					//	$str .= ', "stock"';
-						$str .= ', "'.$a['artid'].'"';
-						//  $str .= ', ".$a['ECAT_HTG'].'"';
-						$str .= "\n";
+						if ($a2) {
+						    //  FUTURE - refactor all calls to use this!
+						    //  this is WAY better, flexible field count handled by caller
+						    unset($a2[0]);
+						    $str = $o.', "'.implode('", "', $a2)."\"\n";
+						    }
+						else {
+						    $str  = $o;
+						    $str .= ', "'.$a['eid'].'"';
+						    $str .= ', "'.$a['title'].'"';
+						    $str .= ', "'.$a['date'].'"';
+						    $str .= ', "'.$a['author'].'"';
+						    $str .= ', "'.$a['pivot'].'"';
+						    $str .= ', "'.$a['image'].'"';
+					//	    $str .= ', "stock"';
+						    $str .= ', "'.$a['artid'].'"';
+						    //  $str .= ', ".$a['ECAT_HTG'].'"';
+						    $str .= "\n";
+						    }
+
+//unset($a2[0]);
+//$str2 = $o.', "'.implode('", "', $a2).'"';
+//echo "\n<pre>str:  ".$str;
+echo "\n<pre>str: ".$str.'</pre>';
+
 						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
 						$o++;
 						}
@@ -590,7 +634,6 @@ if (1) {	//  test test
 		else
 			echo '<br>could not access ecat';
 
-	}  //  testtest
 		if ($fh) fclose($fh);
 		if ($act_done)
 			rename($file, $file.'_0');
