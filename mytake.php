@@ -547,8 +547,8 @@ class ecat {
 		fwrite($fh, $hstr."\n");
 
 //		echo '<br>ecat::update, result: '.($result ? 'true' : 'false');
-		echo "\n<br>a:";  ap($a);
-		echo "\n<br>a2: ";  if ($a2) ap($a2); else echo 'NULL';
+//		echo "\n<br>a:";  ap($a);
+//		echo "\n<br>a2: ";  if ($a2) ap($a2); else echo 'NULL';
 
 		$row = 0;
 		if ($cmd == ECAT_NEW) {
@@ -612,7 +612,7 @@ class ecat {
 //unset($a2[0]);
 //$str2 = $o.', "'.implode('", "', $a2).'"';
 //echo "\n<pre>str:  ".$str;
-echo "\n<pre>str: ".$str.'</pre>';
+//echo "\n<pre>str: ".$str.'</pre>';
 
 						fwrite($fh, $str);  //  FUTURE, check if returns false, try/catch?
 						$o++;
