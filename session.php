@@ -360,13 +360,13 @@ class account {
 		return FALSE;
 		}
 
-	public static function replace($file, &$users) {
+	public static function replace($file, &$users) {  /*  account   */
 		//  Cowboy file version
 		//  Prepend updated record with updated values at start of file.
 		//  Walk account list, rewrite non-matching rows.
 		//    $file    account file: ID#, handle
-		//    $users   pass in empty array, fill with [ID]['handle'] output
-		//    return  false if error, true otherwise
+		//    $users   array may contain multiple records
+		//    return   FALSE if error, TRUE otherwise
 		//  if error, ...
 		//  FUTURE: build a user profile class, allow custom (what this is), SQL, Facebook/OpenID support
 		$result = false;

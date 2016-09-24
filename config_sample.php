@@ -1,5 +1,5 @@
 <?PHP
-$version = 'v0.0.4';
+$version = 'v0.0.4a';
 //  tag filtering to get()
 //  private message/flexible calling fields support to ecat::update
 $home_url = '/';
