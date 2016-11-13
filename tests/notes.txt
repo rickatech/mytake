@@ -1,0 +1,2 @@
+Running phpunit in parent directory should 'just work'.
+Default testing can be tailored by tuning phpunit.xml
