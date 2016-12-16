@@ -11,7 +11,7 @@ secondary samples of those ... for now).
 
 TO DO
 
-Build equivelnet tag lists for Read, Tunes, Flicks, WTF
+Build equivelent tag lists for Read, Tunes, Flicks, WTF
 
 Make all tag words links to record matching page.  Or at least
 major tags are links
@@ -27,3 +27,8 @@ Full Article View
     Copy the URL, logout, manually go to the URL make sure redirect to dashboard.
     Repeat URL with logged user other than article author.
     
+DEPENDENCIES
+
+mobiledetect
+  - https://github.com/serbanghita/Mobile-Detect
+    [ ideal a directive will disable depending on this ]
