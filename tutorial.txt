@@ -1,0 +1,78 @@
+
+ 1) Create a vhost parent folder, make sure web server is able to serve
+    site directory within it somehow
+
+    $ cd .../vhost
+
+    $ mkdir site; cd site
+
+ 2) In parent of vhost target folder ...
+
+    $ git clone https://github.com/rickatech/mytake
+
+    $ git clone https://github.com/serbanghita/Mobile-Detect
+
+      [ mytake currently depends on this passive library ]
+
+    $ git clone https://github.com/michelf/php-markdown
+
+      [ mytake currently depends on this passive library ]
+
+ 2) Prepare site tutorial configuration files
+
+    $ cd .../site
+
+    $ ln -s mytake/index.php index.php
+
+      [ NO!  Instead offer sh demo1.sh ]
+
+    $ ln -s mobile_detect ../Mobile-Detect
+
+    $ ln -s ../php-markdown markdown
+
+  3) 
+
+
+Demo 1)
+
+    Menus/login cluster Outside and Above main content frame
+    Desktop: Fixed width, margins stretch
+    Mobile: ?
+
+    $ sh mytake/demo1.sh [bog]
+
+      [ check that no files are in bog/...,
+        if so populates minimum files to allow webapp to run in bog/...
+        Creates index.php for demo 1 ] 
+
+    $ sh mytake/demo-purge.sh
+
+Demo 2)
+
+    Menus/login cluster Within align top of main content frame
+    Desktop: Min/Max width, main body and margins stretch
+    Mobile: ?
+
+Demo 3)
+
+    Resonsive sections.
+    Min/Max width, main body and margins stretch
+    Mobile: detects portrait vs landscape, responds
+
+Demo 4)
+
+    Daytimer!
+
+Demo 5)
+
+    Dungeon!
+
+Goal 1)
+
+    As much as possible, Menus/login cluster are habdled in a 'view'
+    file set that is front end only code using arrays passed in for anyhting dynamic.
+
+Goal 2)
+
+    Simple 'model' file allows user account and content to be file or database
+    storage.
