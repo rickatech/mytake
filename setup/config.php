@@ -16,7 +16,9 @@ $foot = 'about | join | promotions | careers';
 $brand_t = "rickatech - MyTake";
 $brand_l = "<b>My Take</b>";
 $brand_l = "<span style=\"font-family: sans-serif; font-size: 300%;\"><b>holistik</b> </span>";
-$brand_l = "<span style=\"font-family: Helvetica Narrow,Arial Narrow,Tahoma,Arial,Helvetica,sans-serif; color: #ffffff; font-size: 250%;\"><b>Holisticers</b> </span><span style=\"font-family: sans-serif;\"><br>THE WAY YOU LIVE</span>";
+//$brand_l = "<span style=\"font-family: Helvetica Narrow,Arial Narrow,Tahoma,Arial,Helvetica,sans-serif; color: #ffffff; font-size: 250%;\"><b>Holisticers</b> </span><span style=\"font-family: sans-serif;\"><br>THE WAY YOU LIVE</span>";
+//$brand_l = "<span style=\"font-family: Helvetica Narrow,Arial Narrow,Tahoma,Arial,Helvetica,sans-serif; color: black; font-size: 250%;\"><b>mytake</b> </span><span style=\"font-family: sans-serif;\"><br>simple framework</span>";
+$brand_l = "<span style=\"font-family: sans-serif; font-size: 300%;\"><b>mytake</b> </span>";
 
 const DESK_WIDTH_MIN =  864;
 const DESK_WIDTH_MAX = 1152;
