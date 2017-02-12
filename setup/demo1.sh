@@ -48,9 +48,10 @@ then
   then
       echo creating BOG
       mkdir $BOG
-      chown .$WEBGRP $BOG
-      chmod g+s $BOG
+      chown -R .$WEBGRP $BOG
+      chmod -R g+s $BOG
       touch $BOG/profiles.txt
+      mkdir -p $BOG/users
   else
       HELP="show"
   fi
@@ -71,6 +72,16 @@ then
       cp mytake/setup/panel_home_static.php $SITE
       mkdir -p $SITE/gfx-stock
       cp mytake/setup/gfx-stock/*           $SITE/gfx-stock
+      mkdir -p $SITE/gfx-upload
+      # this should be necessery, code should pull this from gfx-stock
+      cp mytake/setup/gfx-stock/newuser_avatar.png $SITE/gfx-upload
+      mkdir -p $SITE/panel
+      cp mytake/setup/panel/*               $SITE/panel
+      mkdir -p $SITE/email
+      cp mytake/setup/email/*               $SITE/email
+      mkdir -p $SITE/profile
+      cp mytake/setup/profile/*             $SITE/profile
+      cp mytake/setup/prof.php              $SITE
   else
       echo nope
       HELP="show"
@@ -80,8 +91,11 @@ fi
 if [ -v HELP ]
 then
     echo "Error: "$MTERR
+    echo 
+    echo "[ to reset: rm -fr bog; rm -fr site/* ]"
 else
-    echo "Done!"
+    echo "Done, now update URL and file paths in config.php!"
+    echo 
     echo "[ to reset: rm -fr bog; rm -fr site/* ]"
 fi
 
