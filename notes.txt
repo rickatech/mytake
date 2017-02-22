@@ -30,5 +30,8 @@ Full Article View
 DEPENDENCIES
 
 mobiledetect
+  - php-gd, for handling profile images
+  - php-mcrypt, for handling account passwords
+    (httpd restart may be required)
   - https://github.com/serbanghita/Mobile-Detect
     [ ideal a directive will disable depending on this ]
