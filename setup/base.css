@@ -1,0 +1,265 @@
+/*	until a CSS preprocessor starts generating this file
+ *	these comment hilite common directives that likely are
+ *	repeated extensively across remaining CSS.
+	blue      #512DFA
+	drk_blue  #2E198D
+	ddk_blue  #2F007F  */
+
+BODY {  /*  this is the best way to comment  */
+	-webkit-text-size-adjust: none; 
+/*	background-image: url("/gfx-upload/interhex2.png");
+	background: #5fbf00;  */
+/* 	background: #2f007f;  /*  ddk_blue (see above)  */
+	/*  use classic white background now that content is so busy?  */
+	font-family: sans-serif;
+	}
+/*  P {
+	/*  hack so that article summaries built with markdown don't prefi an empty line  */
+/*	margin-top: 0;
+	}  */
+div.main_mob {
+	position: relative;
+	background: #FFFFFF;
+/*	border: solid;  */
+	font-weight: lighter;
+	}
+div.main {  /*  desktop  */
+	position: relative;
+	background: #FFFFFF;
+/*	border: solid;  */
+	margin: auto;
+	font-weight: lighter;
+	}
+A {
+	text-decoration: none;
+	}
+A:HOVER {
+	text-decoration: underline;
+	color: #000000;
+	}
+A.menu {
+	text-decoration: none;
+	color: #000000;
+	}
+A:HOVER.menu {
+	font-weight: bold;
+	}
+A.m2 {  /*  for home 2nd menu  */
+	text-decoration: none;
+	color: grey;
+	}
+A:HOVER.m2 {
+	text-decoration: underline;
+	}
+A.men2 {
+	text-decoration: none;
+	font-weight: bold;
+	color: #2f007f;
+	}
+A:HOVER.men2 {
+	text-decoration: none;
+	font-weight: bolder;
+	}
+A.exref {
+	font-family0: sans-serif;
+	font-style: italic;
+	}
+A.brand_l {
+	color: #000000;
+	}
+A:VISITED.brand_l {
+	color: #000000;
+	}
+A:HOVER.brand_l {
+	text-decoration: none;
+	}
+SPAN.men2 {
+	color: #2f007f;  /*  purple  */
+	font-weight: bold;
+	}
+SPAN.meno {
+	color: lightgrey;
+	}
+SPAN.me2o {
+	color: white;
+	}
+.cat_rows {
+	font-family: sans-serif;
+	}
+.version {
+	color: #7f7f7f;
+	font-family:
+	sans-serif;
+	}
+p.art-fin {
+	margin-top: 0;
+	margin-right: 0;
+	margin-left: 0;
+	margin-bottom: 8em;
+	}
+dl.artex_fm {
+	margin: 0 4px 0 0;
+	}
+textarea.artex_fm {
+	font-family: courier;
+	font-size: smaller;
+	width: 100%;
+	}
+div.menu {
+	display: inline-block;
+	width: 5.5em;
+	text-align: center;
+	margin-bottom: 4px;
+	}
+div.men2 {  /*  match menu + bgcolor  */
+	display: inline-block;
+	width: 5.5em;
+	text-align: center;
+	margin-bottom: 4px;
+	background-color: lightgrey;
+	}
+div.art-fin {
+	margin-top: 0;
+	margin-right: 0;
+	margin-left: 0;
+	margin-bottom: 8em;
+	}
+div.list_head {
+	height: 24px;
+	overflow: hidden;
+	}
+div.list_body {
+	float0: left;
+	width0: 280px;
+	padding: 4px;
+	}
+div.list_tail {
+	height: 48px;
+	overflow: hidden;
+	margin-left: 72px;
+	}
+.exch_pmsg_color {
+/*	background-color: #512DFA;  /*  blue (see above)  */
+	background-color: lightblue;
+	padding: 4px;
+	}
+div.exch_float {
+	float: left;
+	width: 280px;
+	padding: 0 4px 4px 4px;
+	}
+div.loun_float {  /*  like exch_float, sans width  */
+	float: left;
+	padding: 0 4px 4px 4px;
+	}
+div.thing1 {  /*  with thing2, often this is best contained within parent div with additional padding  */
+	width: 50%;
+	float: left;
+	}
+div.thing2 {  /*  with thing1, often this is best contained within parent div with additional padding  */
+	width: auto;
+	float: none;
+	}
+div.col_left {
+	float: left;
+	width: 288px;
+/*	background-color: yellow;  */
+	}
+div.col_full {
+	width: auto;
+	float: none;
+/*	background-color: yellow;  */
+	}
+div.col_stretch {
+	overflow: hidden;
+/*	background-color: pink;  */
+	}
+div.col_fll2 {
+	width: auto;
+	float: none;
+/*	background-color: pink;  */
+	}
+img.artex_sum {  /*  used by at least exchange and symposium summary lists  */
+	padding: 0 4px 0 0;
+	}
+
+/*  profile page css  */
+div.urep {  /*  right side, user representation top most row  */
+/* 	clear: both;  */
+	padding: 0 4px;
+	position: relative;
+/*	margin-bottom: 400px;  */
+	}
+div.prof_entl {  /*  right side, user entitlements, middle row  */
+	clear: both;
+	position: relative;
+	border: 1px solid;
+	padding: 4px;
+	margin: 4px;
+	}
+div.prof_edit_pop_a {  /*  left side, change profile image, bio, goals, tags top most row  */
+	position: absolute;
+	top: 1em;
+	left: 0;
+	padding: 4px 0 0 4px;
+	margin: 0 1em;
+	border: 1px solid;
+	background-color: white;
+	z-index: 1;
+	}
+div.prof_edit_pop_b {  /*  change sector | contact  */
+	position: absolute;
+	top: 1em;
+	left: 0;
+	padding: 4px 0 0 4px;
+	margin: 0 1em;
+	border: 1px solid;
+	background-color: lightgrey;
+	z-index: 1;
+	}
+
+.light {  /*  obsoelte 2016-08, replaced by main, main_mob?  */
+	font-weight: lighter;
+	}
+span.narrow {
+	font-family: Helvetica Narrow,Arial Narrow,Tahoma,Arial,Helvetica,sans-serif; 
+	}
+/* Share by Email popup */
+.close {
+    position:absolute;
+    right:5px;
+    top:5px;
+    cursor:pointer
+}
+div#shareEmailPopup {
+    display:none;
+    position:fixed;
+    left:50%;
+    top:17%;
+    margin-left:-130px;
+    border:2px solid gray;
+    border-radius:10px;
+    background-color:#fff;
+    z-index: 1;
+}
+#shareEmailFields {
+    padding:10px 5px;
+
+}
+#shareEmailForm {
+    max-width:250px;
+    min-width:250px;
+}
+#shareEmailSubmit {
+    text-decoration:none;
+    width:100%;
+    text-align:center;
+    display:block;
+    background-color:#FFBC00;
+    color:#fff;
+    border:1px solid #FFCB00;
+    padding:10px 0;
+    font-size:20px;
+    cursor:pointer;
+    border-radius:5px
+}
