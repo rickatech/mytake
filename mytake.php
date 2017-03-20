@@ -44,6 +44,14 @@ function seq_next_free($cat, $un, $offset) {
 	return ($result);
 	}
 
+class mt_version {
+
+	static public function version() {
+		return '0.4.0.1';
+	}
+
+}
+
 class mt_lock {
 	//  lofi file based locking, suitable for use with shared nfs style storage
 	//  assumes write lock order can be arbitrary
