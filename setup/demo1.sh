@@ -63,6 +63,13 @@ while test $# -gt 0; do
       fi
       shift
       ;;
+    -wg)
+      shift
+      if test $# -gt 0; then
+        WEBGRP=$1
+      fi
+      shift
+      ;;
     *)
       break
       ;;
@@ -183,6 +190,7 @@ then
     echo "-mb path     override path to Mobile-Detect (e.g. /public/Mobile-Detect)"
     echo "-md path     override path to php_markdon   (e.g. /public/php-markdown)"
     echo "-bg path     override private file store    (e.g. /public/bog)"
+    echo "-wg group    group write file store         (e.g. apache)"
     echo
     echo "Example"
     echo "sh mytake/setup/demo1.sh -mb /public/Mobile-Detect -md /public/php-markdown"
