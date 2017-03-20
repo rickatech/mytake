@@ -1,5 +1,8 @@
 <?PHP
-$version = 'v0.0.4b';
+//  CITE  https://en.wikipedia.org/wiki/Software_versioning#Designating_development_stage
+$version = '0.4.0.1';   //  alpha
+// rsion = 'v0.0.4b';
+
 //  tag filtering to get()
 //  private message/flexible calling fields support to ecat::update
 $home_url = '/';
