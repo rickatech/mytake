@@ -406,7 +406,7 @@ include 'email/passwdchng.php';  //  FUTURE - move this to config.php ?
 					account::replace($file_profiles, $r3);
 					$result = "Account password updated, courtesy notice has been sent to ".$r5['mail'];
 					}
-				mail_passwdchng($r5['mail']);
+				MyTake\mail_passwdchng($r5['mail']);
 				}
 			}
 
