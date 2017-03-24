@@ -611,9 +611,10 @@ EOD;
 
 <!--  div style="clear: both;"></div  -->
 
-</div><!--  Main DIV [end]  --><?PHP
+</div><!--  Main DIV [end]  -->
 
-	foot();  ?>
+<?PHP
+	include '../panel/footer_static.php';  ?>
 </BODY>
 
 <script>

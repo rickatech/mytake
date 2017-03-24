@@ -356,9 +356,10 @@ dev_detect_head_meta();  ?>
 </div><!--  Main DIV [end]  -->
 
 <?PHP
-	foot();
+	include 'panel/footer_static.php';
 	if (isset($keys['ga'])) {  ?>
-<script type="text/JavaScript" src="/ga.js"></script>  <?PHP  }  ?>
+<script type="text/JavaScript" src="/ga.js"></script>
+	<?PHP  }  ?>
 </BODY>
 </HTML>
 

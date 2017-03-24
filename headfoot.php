@@ -51,13 +51,6 @@ function body_lowright () {
 		}
 	echo "\n<div class=version style=\"position: absolute; right: 0px; bottom: 0;\">";
 	echo $version."&nbsp;</div>";
-	}	
+}	
 
-function foot() {
-	global $foot, $notes, $debug_mask;
-
-	echo "<div style=\"text-align: center; font-family: sans-serif; margin-top: 0.5em;\">".$foot.'</div>'; 
-	if ($debug_mask & DEBUG_DISPSIZE)
-		echo "\n<div style=\"position: fixed; bottom: 0; right: 0; background-color: white; text-align: right; font-size: smaller;\">".$notes."<span id='mt_msg'></span></div>";
-	}
 ?>
