@@ -148,7 +148,7 @@ else {
 				echo "\n<p>".$msg."</p>";
 			else {
 				echo "\n<p>An account activation email has been send to you, ".$signup['email']."</p>";
-				mail_activation($signup);  ?>
+				MyTake\mail_activation($signup);  ?>
 <!--  http://stage.holistik.org/?signup&activate&code=QOFYOA&un=wizard  -->
 <form method="get" action="/profile/">
 <input     name="activate" type="hidden">
