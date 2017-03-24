@@ -3,7 +3,10 @@ $version = 'v0.0.4b';
 //  tag filtering to get()
 //  private message/flexible calling fields support to ecat::update
 $home_url = '/';
-$actv_url = 'http://dungeon.local.zaptech.org/';
+
+//  $actv_url = 'http://dungeon.local.zaptech.org/';
+$actv_url = ('on' === $_SERVER['HTTPS'] ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].'/';
+
 $edit_url = 'https://blog.zaptech.com/?file=mytake/';
 //  $data_dir = '/home/rickatech/dungeon/bog';
 $file_dir = '##FILUPL##';   //  e.g. '/public/mytake/site/gfx-upload'
@@ -13,7 +16,6 @@ $catalog_data = $data_dir.'/data_cp';
 
 $menu_mark = 'MENU';
 $menu_helo = 'Hello ';  //  okay for this to be commented out/unset to skip
-$foot = 'about | join | promotions | careers';
 
 $brand_t = "rickatech - MyTake";
 $brand_l = "<b>My Take</b>";
