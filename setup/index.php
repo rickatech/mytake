@@ -348,7 +348,7 @@ dev_detect_head_meta();  ?>
 	/*  === MODE: HOME (default) ===  */
 	else {  /*  --- MAIN SUMMARY DISPLAY ---  */
 		//  FUTURE - place this in a hidden div, use AJAX to pull dynamically
-		include 'panel_home_static.php';
+		include 'panel/home_static.php';
 		}  /*  --- MAIN SUMMARY DISPLAY [end] ---  */  ?>
 
 <!--  keep long run inline content from bleeding below footer  -->
