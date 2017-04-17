@@ -2678,7 +2678,9 @@ function image_make_min($file, $src = NULL, $t = NULL, $w = 55, $h = 55) {
 	return (NULL);
 	}
 
-function body_menu($m, $m2 = false) {
+function body_menu_x($m, $m2 = false) {
+        /*  OBSOLETE, see panel/menu.php  */
+
 	//  m   menu to show selected
 	//      if tag get parameter, consider pivot selected    
 	//      undefined, hilight no menu
