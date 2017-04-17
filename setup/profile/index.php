@@ -77,7 +77,10 @@ else
 	echo "\n<div style=\"float: right;\">&odash; &#9679; &cir;</div>";
 	//  output menus
 	//  FUTURE, insert a fold that cuts cleanly beneath both left logo/branch and right login/profile cluster
-	body_menu($invoke);
+
+	/*  Inline menu panel  */
+	include '../panel/menu.php';
+	body_menu_2($invoke);
 
 	//  FUTURE - move into commong function for index.php, .../profile/ to call?
 	$dbout = "\n<p style=\"margin: 0; font-size: smaller;\">";

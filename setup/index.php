@@ -83,11 +83,13 @@ dev_detect_head_meta();  ?>
 //	head_body('light', true);  /*  Main DIV  */
 	body_lowright();
 
+	/*  Inline menu panel  */
+	include 'panel/menu.php';
 	if (isset($_GET['m2']))
-		body_menu($invoke, $invoke_2 = $_GET['m2']);
+		body_menu_2($invoke, $invoke_2 = $_GET['m2']);
 	else {
 		$invoke_2 = ($invoke != 'dash') ? false : NULL;
-		body_menu($invoke, $invoke_2);
+		body_menu_2($invoke, $invoke_2);
 		}  ?>
 
 <!--  form submit processing, all pages may need similar code  -->
