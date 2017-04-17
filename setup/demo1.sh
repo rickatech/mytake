@@ -161,7 +161,7 @@ then
       cp mytake/setup/index.php             $SITE
       cp mytake/setup/util.php              $SITE
       cp mytake/setup/base.*                $SITE
-      cp mytake/setup/panel_home_static.php $SITE
+#     cp mytake/setup/panel_home_static.php $SITE
       mkdir -p $SITE/gfx-stock
       cp mytake/setup/gfx-stock/*           $SITE/gfx-stock
       mkdir -p $SITE/gfx-upload
