@@ -5,7 +5,7 @@ $version = 'v0.0.4b';
 $home_url = '/';
 
 //  $actv_url = 'http://dungeon.local.zaptech.org/';
-$actv_url = ('on' === $_SERVER['HTTPS'] ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].'/';
+$actv_url = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].'/';
 
 $edit_url = 'https://blog.zaptech.com/?file=mytake/';
 //  $data_dir = '/home/rickatech/dungeon/bog';
@@ -51,4 +51,9 @@ $debug_mask = DEBUG_MOBILE_ADMIN | DEBUG_MENU_BG | DEBUG_DISPSIZE | DEBUG_UREP_V
 
 //  cookie customization/enable
 $cookie_expire = 120;   //  1 minutes (rather short for testing), in production make this 1 week?
-$cookie_url = '.zaptech.com';  ?>
+$cookie_url = '.zaptech.com';
+
+//  usernames that have administrator abilities
+$admins = array();
+
+?>
