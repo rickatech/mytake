@@ -1,7 +1,6 @@
 <?PHP
 date_default_timezone_set('America/Los_Angeles');  // otherwise PHP warnings
 include 'mobile_detect/Mobile_Detect.php';
-//  require_once '/Users/fredness/howto/public_html/php/test/Mobile-Detect-2.8.17/Mobile_Detect.php';
 $detect = new Mobile_Detect;    //  Include and instantiate the class.
 include 'mytake/session.php';  //  FUTURE, rename this core.php?
 include "config.php";

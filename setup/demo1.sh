@@ -8,7 +8,7 @@ MYTAKEP=../
 # directoory of MobileDetect
 MOBDET=MobileDetect
 MOBDETP=../
-# directoory of php-markdown
+# directory of php-markdown
 MKDOWN=php-markdown
 MKDOWNP=../
 
