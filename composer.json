@@ -1,0 +1,11 @@
+{
+    "comment": {
+        "2017-07 Rick" : "PHP Version >= 5.5.0 doesn't need ircmaxell/password-compat"
+    },
+    "require": {
+        "ext-gd":"*",
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "michelf/php-markdown": "1.7.0",
+        "ircmaxell/password-compat": "^1.0.0"
+    }
+}

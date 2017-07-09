@@ -1,0 +1,20 @@
+In the same folder that contains composer.json run 
+
+$ composer install
+
+  [ this should download/install mobile-detect, michelf, ...  in the vendors folder ]
+
+
+Reset
+
+$ rm composer.lock; rm -fr vendor
+
+
+PHP version 5.5.0 >= does need the extra include in setup/profile/index.php,
+but it shouldn't hurt if it is loaded anyway.
+
+
+Related
+  - https://stackoverflow.com/questions/32055527/composer-dependency-for-specified-php-version
+  - https://stackoverflow.com/questions/12896780/should-composer-lock-be-committed-to-version-control
+  - https://github.com/ircmaxell/password_compat
