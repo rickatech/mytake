@@ -1,8 +1,10 @@
 <?PHP
 date_default_timezone_set('America/Los_Angeles');  // otherwise PHP warnings - FUTURE, move to config.php?
-include_once '../autoloader.php';
+//  include_once '../autoloader.php';
 include '../mobile_detect/Mobile_Detect.php';
-//  require_once '/Users/fredness/howto/public_html/php/test/Mobile-Detect-2.8.17/Mobile_Detect.php';
+if (version_compare(PHP_VERSION, '5.5.0', '<'))
+    /*  Pre-PHP 5.5.0 has no password_hash(), this fills the gap  */
+    include '../mytake/vendor/ircmaxell/password-compat/lib/password.php';
 $detect = new Mobile_Detect;    //  Include and instantiate the class.
 include '../mytake/session.php';  //  FUTURE, rename this core.php?
 include "../config.php";
