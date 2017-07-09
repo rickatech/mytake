@@ -278,14 +278,18 @@ class account {
 
 	public static function password_make($input) {
 		/*  return new password hash  */
-		//  CITATION
-		//  http://php.net/manual/en/faq.passwords.php#faq.passwords.fasthash
-		$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
-		$salt = base64_encode($salt);
-		$salt = str_replace('+', '.', $salt);
-		$salt = '$2y$10$'.$salt.'$';
-		//  crypt() prepends result string with critical hash parameters
-		$hash = crypt($input, $salt);
+		if (0) {
+			//  CITATION
+			//  http://php.net/manual/en/faq.passwords.php#faq.passwords.fasthash
+			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+			$salt = base64_encode($salt);
+			$salt = str_replace('+', '.', $salt);
+			$salt = '$2y$10$'.$salt.'$';
+			//  crypt() prepends result string with critical hash parameters
+			$hash = crypt($input, $salt);
+		} else {
+			$hash = password_hash($input, PASSWORD_DEFAULT);
+		}
 //		echo "\n<br>salt: &nbsp; <tt>".$salt."</tt>\n<br>hash: <tt>".$hash.'</tt>';
 	//	echo "\n<br>equal: &nbsp; <tt>".$hash." / ".crypt($input, $hash).'</tt>';
 	//	if (hash_equals($hash, crypt($input, $hash)))
